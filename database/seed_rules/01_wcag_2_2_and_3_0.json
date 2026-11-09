@@ -1,0 +1,265 @@
+[
+  {
+    "id": "WCAG-2.4.11",
+    "standard_family": "WCAG_2_2",
+    "category": "Accessibility",
+    "title_ru": "Фокус не перекрыт (Минимум) — Защита от перекрытия sticky-элементами",
+    "description_ru": "Когда любой пользовательский интерфейсный компонент получает клавиатурный фокус (:focus-visible), элемент не должен быть полностью скрыт контентом, созданным автором (например, фиксированными шапками sticky/fixed header, нижними панелями навигации, баннерами cookie или плавающими виджетами чата). Обязательное требование European Accessibility Act (EAA) и WCAG 2.2 Level AA.",
+    "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
+    "target_states": ["focus-visible", "default", "viewport_320px", "zoom_200"],
+    "quantitative_threshold": {
+      "min_visible_focus_ratio": 0.1,
+      "min_scroll_padding_px": 64
+    },
+    "verification_modality": "AUTOMATED_DOM",
+    "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
+    "playwright_check_snippet": "const focused = document.activeElement; if (!focused || focused === document.body) return 'DOES_NOT_APPLY'; const rect = focused.getBoundingClientRect(); const cx = rect.left + rect.width / 2; const cy = rect.top + rect.height / 2; const topEl = document.elementFromPoint(cx, cy); const isVisible = topEl && (focused === topEl || focused.contains(topEl) || topEl.contains(focused)); return isVisible ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
+    "vision_prompt_heuristic": "Inspect the screenshot during keyboard Tab navigation. Verify whether the currently focused element (with focus ring) is partially or completely covered by a sticky header, sticky footer, floating chat button, or cookie modal.",
+    "remediation_guide_ru": "Задайте CSS-свойства `scroll-padding-top` и `scroll-padding-bottom` на корневом скролл-контейнере (`html`), равные высоте фиксированных панелей (например, `html { scroll-padding-top: 80px; scroll-padding-bottom: 64px; }`), чтобы при перемещении по Tab браузер автоматически прокручивал элемент в видимую область вне перекрытия.",
+    "wcag_3_0_tier": "BRONZE",
+    "iso_9241_110_principle": "CONTROLLABILITY"
+  },
+  {
+    "id": "WCAG-2.4.12",
+    "standard_family": "WCAG_2_2",
+    "category": "Accessibility",
+    "title_ru": "Фокус не перекрыт (Расширенный) — Полная видимость элемента в фокусе",
+    "description_ru": "При получении клавиатурного фокуса ни одна часть сфокусированного компонента и его индикатора фокуса не должна перекрываться плавающими или фиксированными элементами интерфейса (0% перекрытия). Исключение допускается только для полупрозрачных оверлеев или панелей, открытых самим пользователем, которые можно закрыть клавишей Escape без потери позиции фокуса.",
+    "legal_or_business_risk": "BEST_PRACTICE_ENHANCEMENT",
+    "target_states": ["focus-visible", "zoom_200"],
+    "quantitative_threshold": {
+      "min_visible_focus_ratio": 1.0,
+      "max_overlap_px": 0
+    },
+    "verification_modality": "AUTOMATED_DOM",
+    "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
+    "playwright_check_snippet": "const el = document.activeElement; if (!el || el === document.body) return 'DOES_NOT_APPLY'; const r = el.getBoundingClientRect(); const pts = [[r.left+2, r.top+2], [r.right-2, r.top+2], [r.left+2, r.bottom-2], [r.right-2, r.bottom-2]]; const allClear = pts.every(([x,y]) => { const hit = document.elementFromPoint(x,y); return hit && (el === hit || el.contains(hit) || hit.contains(el)); }); return allClear ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
+    "vision_prompt_heuristic": "Check all four corners of the active keyboard focus indicator on the screenshot. Confirm that zero pixels of the focused control or its outline are obscured by fixed toolbars, FABs, or persistent banners.",
+    "remediation_guide_ru": "Увеличьте `scroll-margin-block` на интерактивных элементах с запасом на толщину `outline-offset` (например, `:focus-visible { scroll-margin-block: 96px; }`) и обеспечьте закрытие любых всплывающих панелей по клавише `Escape`.",
+    "wcag_3_0_tier": "GOLD",
+    "iso_9241_110_principle": "CONTROLLABILITY"
+  },
+  {
+    "id": "WCAG-2.4.13",
+    "standard_family": "WCAG_2_2",
+    "category": "Accessibility",
+    "title_ru": "Визуальные характеристики индикатора фокуса (Контраст >= 3:1 и толщина >= 2px)",
+    "description_ru": "Индикатор клавиатурного фокуса (:focus-visible) должен иметь площадь не менее периметра элемента толщиной 2 CSS-пикселя и обеспечивать контрастность изменения состояния (между пикселями в фокусе и без фокуса) не менее 3.0:1, а также контраст с прилегающим фоном не менее 3.0:1.",
+    "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
+    "target_states": ["focus-visible", "dark_mode"],
+    "quantitative_threshold": {
+      "min_contrast_ui": 3.0,
+      "min_focus_outline_px": 2,
+      "min_focus_offset_px": 2
+    },
+    "verification_modality": "AUTOMATED_DOM",
+    "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
+    "playwright_check_snippet": "const el = document.activeElement; if (!el || el === document.body) return 'DOES_NOT_APPLY'; const cs = window.getComputedStyle(el); const outlineWidth = parseFloat(cs.outlineWidth) || 0; const hasBoxShadow = cs.boxShadow && cs.boxShadow !== 'none'; return (cs.outlineStyle !== 'none' && outlineWidth >= 2) || hasBoxShadow ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
+    "vision_prompt_heuristic": "Examine the focused interactive element. Verify that a clearly visible, high-contrast (>= 3:1) focus ring of at least 2px thickness surrounds the control and works on both light and dark backgrounds.",
+    "remediation_guide_ru": "Никогда не используйте `outline: none` без замены. Применяйте двухслойный универсальный индикатор фокуса: `:focus-visible { outline: 2px solid #005FCC; outline-offset: 2px; box-shadow: 0 0 0 4px #FFFFFF; }`, гарантирующий контраст >= 3:1 на любом фоне.",
+    "wcag_3_0_tier": "SILVER",
+    "iso_9241_110_principle": "SELF_DESCRIPTIVENESS"
+  },
+  {
+    "id": "WCAG-2.5.7",
+    "standard_family": "WCAG_2_2",
+    "category": "Touch_Ergonomics",
+    "title_ru": "Альтернатива перетаскиванию (Dragging Movements — одиночный клик/тап)",
+    "description_ru": "Любая функциональность, использующая движение перетаскивания (drag-and-drop в канбан-досках, сортировка списков, ползунки-слайдеры цен, панорамирование карт, карусели), должна быть полностью выполнима с помощью простого одиночного указателя (клик или тап по кнопкам перемещения, выпадающему меню позиции или числовому полю ввода) без необходимости удерживать кнопку мыши/палец во время движения.",
+    "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
+    "target_states": ["default", "focus-visible", "active"],
+    "quantitative_threshold": {
+      "requires_single_pointer_fallback": true,
+      "min_target_px": 24
+    },
+    "verification_modality": "AI_MULTIMODAL_VISION",
+    "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
+    "playwright_check_snippet": "const draggables = Array.from(document.querySelectorAll('[draggable=\"true\"], input[type=\"range\"], [role=\"slider\"]')); if (draggables.length === 0) return 'DOES_NOT_APPLY'; const hasControls = draggables.every(el => el.tagName === 'INPUT' || document.querySelector('[aria-controls], button[data-move], input[type=\"number\"]')); return hasControls ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
+    "vision_prompt_heuristic": "Check if the page contains sliders, range filters, kanban cards, sortable lists, or interactive maps. If none exist, return DOES_NOT_APPLY. If present, verify that explicit single-tap/click alternatives exist (e.g., numeric min/max text inputs next to price sliders, up/down/move-to buttons on draggable cards, or +/- pan buttons on maps).",
+    "remediation_guide_ru": "Для всех `input[type='range']` и кастомных слайдеров добавьте связанные числовые поля `<input type='number'>` или кнопки шагового изменения (`-` / `+`). Для drag-and-drop карточек и списков добавьте контекстное меню («Переместить вверх/вниз/в колонку...»), вызываемое одиночным кликом.",
+    "wcag_3_0_tier": "BRONZE",
+    "iso_9241_110_principle": "CONTROLLABILITY"
+  },
+  {
+    "id": "WCAG-2.5.8",
+    "standard_family": "WCAG_2_2",
+    "category": "Touch_Ergonomics",
+    "title_ru": "Минимальный размер цели (Target Size Minimum — жесткий порог 24x24 CSS px)",
+    "description_ru": "Размер области нажатия для любого интерактивного элемента указателя (кнопки, иконки, чекбоксы, пагинация, кнопки закрытия) должен составлять не менее 24x24 CSS-пикселей, за исключением inline-ссылок внутри предложений или случаев, когда вокруг меньшей цели обеспечена свободная от других интерактивных элементов буферная зона радиусом 24px.",
+    "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
+    "target_states": ["default", "viewport_320px"],
+    "quantitative_threshold": {
+      "min_target_px": 24,
+      "min_spacing_circle_px": 24
+    },
+    "verification_modality": "AUTOMATED_DOM",
+    "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
+    "playwright_check_snippet": "const targets = Array.from(document.querySelectorAll('button, a[href], input, select, textarea, [role=\"button\"], [role=\"checkbox\"], [role=\"tab\"]')).filter(el => { const s = getComputedStyle(el); return s.display !== 'none' && s.visibility !== 'hidden' && s.display !== 'inline'; }); if (!targets.length) return 'DOES_NOT_APPLY'; const undersized = targets.filter(el => { const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0 && (r.width < 24 || r.height < 24); }); return undersized.length === 0 ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
+    "vision_prompt_heuristic": "Inspect all icon buttons, close ('X') buttons, pagination controls, checkboxes, and filter chips. Identify any tightly packed or tiny hit targets that appear smaller than 24x24px without sufficient spacing.",
+    "remediation_guide_ru": "Задайте всем интерактивным элементам `min-width: 24px; min-height: 24px;` (рекомендуется `44px` по Apple HIG / `48px` по Material 3). Если визуальная иконка меньше (`16x16px`), расширьте кликабельную зону через `padding` или псевдоэлемент `::after { content: ''; position: absolute; inset: -8px; }`.",
+    "wcag_3_0_tier": "BRONZE",
+    "iso_9241_110_principle": "USE_ERROR_ROBUSTNESS"
+  },
+  {
+    "id": "WCAG-3.2.6",
+    "standard_family": "WCAG_2_2",
+    "category": "Navigation_Search",
+    "title_ru": "Последовательное расположение помощи (Consistent Help)",
+    "description_ru": "Если веб-сайт предоставляет механизмы помощи (контактные данные поддержки, телефон, email, ссылка на FAQ, онлайн-чат с оператором или ИИ-ассистентом), они должны располагаться в одном и том же относительном порядке в DOM и визуальной сетке на всех страницах сайта.",
+    "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
+    "target_states": ["default", "viewport_320px"],
+    "quantitative_threshold": {
+      "consistent_dom_order": true
+    },
+    "verification_modality": "AUTOMATED_DOM",
+    "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
+    "playwright_check_snippet": "const helpLinks = Array.from(document.querySelectorAll('header a, footer a, [aria-label*=\"Help\" i], [aria-label*=\"Помощь\" i], [aria-label*=\"Поддержка\" i], [href*=\"help\"], [href*=\"support\"], [href*=\"faq\"], [href^=\"tel:\"], [href^=\"mailto:\"]')); return helpLinks.length > 0 ? 'APPLIED_PASS' : 'DOES_NOT_APPLY';",
+    "vision_prompt_heuristic": "Locate any Help, Support, Contact Us, FAQ link, or Chat widget in the header, footer, or bottom-right corner. Verify that it is clearly visible, not obscured, and placed in a standard, predictable global landmark region.",
+    "remediation_guide_ru": "Разместите ссылку на помощь/поддержку или виджет чата в глобальном шаблоне `<header>` или `<footer>` в фиксированном порядке следования DOM, чтобы при переходе между страницами и изменении масштаба (до 200%) порядок обхода по `Tab` оставался неизменным.",
+    "wcag_3_0_tier": "BRONZE",
+    "iso_9241_110_principle": "CONFORMITY_WITH_USER_EXPECTATIONS"
+  },
+  {
+    "id": "WCAG-3.3.7",
+    "standard_family": "WCAG_2_2",
+    "category": "Forms_Checkout",
+    "title_ru": "Устранение избыточного ввода (Redundant Entry)",
+    "description_ru": "Информация, ранее введенная пользователем или предоставленная ему в рамках текущей многошаговой сессии (например, адрес доставки для платежного адреса, имя и телефон при оформлении заказа или регистрации), должна либо заполняться автоматически, либо быть доступной для выбора в один клик (чекбокс «Адрес плательщика совпадает с адресом доставки» или выпадающий список).",
+    "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
+    "target_states": ["default", "error"],
+    "quantitative_threshold": {
+      "max_duplicate_manual_fields": 0
+    },
+    "verification_modality": "AUTOMATED_DOM",
+    "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
+    "playwright_check_snippet": "const forms = document.querySelectorAll('form'); if (forms.length === 0) return 'DOES_NOT_APPLY'; const inputs = Array.from(document.querySelectorAll('input:not([type=\"hidden\"]):not([type=\"submit\"]):not([type=\"checkbox\"]):not([type=\"radio\"])')); if (inputs.length === 0) return 'DOES_NOT_APPLY'; const withAutocomplete = inputs.filter(i => i.hasAttribute('autocomplete') && i.getAttribute('autocomplete') !== 'off'); return withAutocomplete.length / inputs.length >= 0.7 ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
+    "vision_prompt_heuristic": "If the page contains a checkout, registration, or multi-step form, check whether billing/shipping or repeated user details offer a 'Same as shipping address' checkbox or pre-populated values. If no form is present, return DOES_NOT_APPLY.",
+    "remediation_guide_ru": "Сохраняйте введенные поля формы в `sessionStorage`/стейт-менеджере между шагами визарда, добавьте чекбокс `«Совпадает с адресом доставки»` (по умолчанию отмеченный) и проставьте стандартные атрибуты `autocomplete` (`name`, `email`, `tel`, `shipping street-address`).",
+    "wcag_3_0_tier": "BRONZE",
+    "iso_9241_110_principle": "SUITABILITY_FOR_TASK"
+  },
+  {
+    "id": "WCAG-3.3.8",
+    "standard_family": "WCAG_2_2",
+    "category": "Account_SelfService",
+    "title_ru": "Доступная аутентификация (Минимум) — Запрет когнитивных тестов и блокировки вставки пароля",
+    "description_ru": "Процесс входа и аутентификации не должен требовать прохождения когнитивных тестов (запоминание пароля по памяти без менеджера паролей, решение арифметических или текстовых головоломок). Поля пароля и кодов обязаны разрешать вставку из буфера обмена (`paste`), иметь корректный `autocomplete=\"current-password\"` / `autocomplete=\"one-time-code\"` и поддерживать беспарольный вход (WebAuthn / Passkeys, Magic Link или OAuth).",
+    "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
+    "target_states": ["default", "error"],
+    "quantitative_threshold": {
+      "allow_clipboard_paste": true,
+      "require_autocomplete_token": true
+    },
+    "verification_modality": "AUTOMATED_DOM",
+    "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
+    "playwright_check_snippet": "const pwdInputs = Array.from(document.querySelectorAll('input[type=\"password\"]')); if (pwdInputs.length === 0) return 'DOES_NOT_APPLY'; const valid = pwdInputs.every(el => { const ac = el.getAttribute('autocomplete') || ''; const blocksPaste = el.getAttribute('onpaste') === 'return false'; return !blocksPaste && (ac.includes('password') || ac.includes('webauthn')); }); return valid ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
+    "vision_prompt_heuristic": "If a login, sign-up, or authentication form is visible, verify whether it supports password managers, 'Show/Hide password' toggle, and alternative cognitive-free login options (Passkey, Sign in with Google/Apple, or Magic Link). If no auth form exists, return DOES_NOT_APPLY.",
+    "remediation_guide_ru": "Удалите любые обработчики `onpaste=\"return false\"` или `e.preventDefault()` на событии `paste` у полей пароля и OTP. Укажите `autocomplete=\"username webauthn\"` и `autocomplete=\"current-password\"`, добавьте кнопку переключения видимости пароля (`type=\"text\"`/`type=\"password\"`) и интеграцию WebAuthn/Passkeys.",
+    "wcag_3_0_tier": "SILVER",
+    "iso_9241_110_principle": "USE_ERROR_ROBUSTNESS"
+  },
+  {
+    "id": "WCAG-3.3.9",
+    "standard_family": "WCAG_2_2",
+    "category": "Account_SelfService",
+    "title_ru": "Доступная аутентификация (Расширенный) — Отказ от визуальных CAPTCHA с распознаванием объектов",
+    "description_ru": "Аутентификация не должна включать распознавание объектов на изображениях (например, «выберите все квадраты со светофорами или велосипедами»), даже если это распространенные объекты. Защита от ботов должна быть пассивной или криптографической (WebAuthn, аппаратные ключи безопасности, OAuth2).",
+    "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
+    "target_states": ["default", "error"],
+    "quantitative_threshold": {
+      "zero_puzzle_captcha": true
+    },
+    "verification_modality": "AI_MULTIMODAL_VISION",
+    "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
+    "playwright_check_snippet": "const authForms = document.querySelectorAll('input[type=\"password\"], form[action*=\"login\"], form[action*=\"auth\"]'); if (authForms.length === 0) return 'DOES_NOT_APPLY'; const hasImageGridPuzzle = document.querySelector('[title*=\"recaptcha challenge\" i], .captcha-image-grid'); return hasImageGridPuzzle ? 'VIOLATED_FAIL' : 'APPLIED_PASS';",
+    "vision_prompt_heuristic": "Inspect any login or registration screen. Verify that users are not forced to solve visual object-recognition puzzles or distorted text CAPTCHAs. If no authentication screen is present, return DOES_NOT_APPLY.",
+    "remediation_guide_ru": "Замените интерактивные визуальные CAPTCHA-головоломки на криптографическую аттестацию устройств (Private Access Tokens, WebAuthn Passkeys) или серверный анализ поведенческого риска без участия пользователя.",
+    "wcag_3_0_tier": "GOLD",
+    "iso_9241_110_principle": "SUITABILITY_FOR_TASK"
+  },
+  {
+    "id": "WCAG-1.4.10",
+    "standard_family": "WCAG_2_2",
+    "category": "Accessibility",
+    "title_ru": "Адаптивный перенос контента на 320 CSS px без горизонтального скролла (Reflow)",
+    "description_ru": "При ширине области просмотра 320 CSS-пикселей (эквивалент масштабирования 400% на экране шириной 1280px) весь контент и функциональность должны перестраиваться в одну колонку без появления двумерной (горизонтальной и вертикальной) прокрутки и без обрезания текста или кнопок.",
+    "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
+    "target_states": ["viewport_320px", "zoom_200"],
+    "quantitative_threshold": {
+      "max_horizontal_overflow_px": 0,
+      "reflow_viewport_width_px": 320
+    },
+    "verification_modality": "AUTOMATED_DOM",
+    "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
+    "playwright_check_snippet": "const docWidth = document.documentElement.clientWidth; const scrollWidth = document.documentElement.scrollWidth; return scrollWidth <= docWidth + 1 ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
+    "vision_prompt_heuristic": "Evaluate the 320x568 viewport screenshot. Check if any cards, headings, tables, or buttons overflow off the right edge of the screen or collide with adjacent elements.",
+    "remediation_guide_ru": "Замените фиксированные ширины (`width: 400px`) на гибкие (`width: 100%; max-width: 400px`), используйте `flex-wrap: wrap`, `grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr))` и `overflow-wrap: break-word` для длинных заголовков и URL.",
+    "wcag_3_0_tier": "BRONZE",
+    "iso_9241_110_principle": "SUITABILITY_FOR_TASK"
+  },
+  {
+    "id": "WCAG-1.4.12",
+    "standard_family": "WCAG_2_2",
+    "category": "Accessibility",
+    "title_ru": "Устойчивость верстки к пользовательским интервалам текста (Text Spacing)",
+    "description_ru": "При принудительном увеличении текстовых интервалов пользователем (межстрочный интервал `line-height` до 1.5x от размера шрифта, отступ после абзацев до 2.0x, межбуквенный интервал `letter-spacing` до 0.12em, интервал между словами `word-spacing` до 0.16em) не должно происходить потери контента, наложения строк друг на друга или обрезания текста внутри фиксированных по высоте контейнеров (`overflow: hidden`).",
+    "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
+    "target_states": ["default", "zoom_200", "viewport_320px"],
+    "quantitative_threshold": {
+      "line_height_multiplier": 1.5,
+      "paragraph_spacing_multiplier": 2.0,
+      "letter_spacing_em": 0.12,
+      "word_spacing_em": 0.16
+    },
+    "verification_modality": "AUTOMATED_DOM",
+    "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
+    "playwright_check_snippet": "const style = document.createElement('style'); style.id = 'wcag-1412-probe'; style.textContent = '* { line-height: 1.5 !important; letter-spacing: 0.12em !important; word-spacing: 0.16em !important; } p { margin-bottom: 2em !important; }'; document.head.appendChild(style); const clipped = Array.from(document.querySelectorAll('p, h1, h2, h3, button, a, span')).filter(el => { const cs = getComputedStyle(el); return (cs.overflow === 'hidden' || cs.overflowY === 'hidden') && el.scrollHeight > el.clientHeight + 2; }); style.remove(); return clipped.length === 0 ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
+    "vision_prompt_heuristic": "Inspect buttons, badges, navigation links, and card titles when text spacing is expanded. Verify that no text is vertically clipped or overlapping adjacent lines.",
+    "remediation_guide_ru": "Откажитесь от жесткой фиксации высоты текстовых блоков и кнопок (`height: 36px; overflow: hidden`). Используйте `min-height: 44px; height: auto; padding-block: 0.5rem;` и относительные единицы `rem`/`em`.",
+    "wcag_3_0_tier": "SILVER",
+    "iso_9241_110_principle": "CONTROLLABILITY"
+  },
+  {
+    "id": "WCAG-1.4.3",
+    "standard_family": "WCAG_2_2",
+    "category": "Accessibility",
+    "title_ru": "Минимальный контраст текста (>= 4.5:1 для обычного текста, >= 3.0:1 для крупного) и нетекстовых элементов UI (>= 3.0:1)",
+    "description_ru": "Визуальное представление текста и изображений текста должно иметь коэффициент контрастности не менее 4.5:1 (3.0:1 для крупного текста от 18pt / 24px или 14pt / 18.66px bold). Границы полей ввода, иконки и индикаторы состояний (WCAG 1.4.11) должны иметь контраст не менее 3.0:1 относительно прилегающих цветов.",
+    "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
+    "target_states": ["default", "hover", "focus-visible", "disabled", "error", "dark_mode"],
+    "quantitative_threshold": {
+      "min_contrast_text": 4.5,
+      "min_contrast_large_text": 3.0,
+      "min_contrast_ui": 3.0
+    },
+    "verification_modality": "AUTOMATED_DOM",
+    "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
+    "playwright_check_snippet": "return window.__axeColorContrastPassed !== false ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
+    "vision_prompt_heuristic": "Check placeholder text inside inputs, secondary captions, badges, and input borders in both light and dark modes. Flag any low-contrast gray-on-gray text or barely visible form field borders.",
+    "remediation_guide_ru": "Используйте семантические дизайн-токены текста с проверкой по WCAG 2.2 AA (минимум `#595959` на белом `#FFFFFF` для обычного текста и `#767676` для рамок `input` и иконок).",
+    "wcag_3_0_tier": "BRONZE",
+    "iso_9241_110_principle": "SELF_DESCRIPTIVENESS"
+  },
+  {
+    "id": "WCAG3-SCORE-01",
+    "standard_family": "WCAG_3_0_DRAFT",
+    "category": "Accessibility",
+    "title_ru": "Матрица зрелости WCAG 3.0 Draft (Уровни Bronze, Silver, Gold и критические блокеры сценариев)",
+    "description_ru": "В соответствии со спецификацией W3C WCAG 3.0 (W3C Accessibility Guidelines 3.0 Working Draft) оценка страницы строится не только на атомарных проверках, но и на целостном прохождении пользовательского пути (Holistic Task Flow) с весовыми коэффициентами: уровень Bronze требует отсутствия критических блокеров (0 нарушений класса CRITICAL_LEGAL_EAA_ADA), Silver требует >= 90% прохождения эргономических и когнитивных эвристик, Gold — 100% соответствия включая адаптацию под нейроотличия и сенсорные предпочтения.",
+    "legal_or_business_risk": "BEST_PRACTICE_ENHANCEMENT",
+    "target_states": ["default", "focus-visible", "viewport_320px", "dark_mode", "reduced_motion"],
+    "quantitative_threshold": {
+      "bronze_max_critical_blockers": 0,
+      "silver_min_pass_rate_pct": 90,
+      "gold_min_pass_rate_pct": 98
+    },
+    "verification_modality": "AUTOMATED_DOM",
+    "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
+    "playwright_check_snippet": "const hasMain = !!document.querySelector('main, [role=\"main\"]'); const hasTitle = document.title && document.title.trim().length > 0; const hasLang = !!document.documentElement.getAttribute('lang'); return (hasMain && hasTitle && hasLang) ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
+    "vision_prompt_heuristic": "Perform a holistic WCAG 3.0 visual audit: verify clear landmark structure, absence of cognitive traps, high perceptual contrast (APCA readiness), and clear task progression.",
+    "remediation_guide_ru": "Устраните все ошибки уровня `CRITICAL_LEGAL_EAA_ADA` для достижения базового уровня `BRONZE`, внедрите поддержку пользовательских медиа-запросов (`prefers-reduced-motion`, `prefers-contrast`, `prefers-color-scheme`) для уровня `SILVER` и проведите сквозное тестирование ключевых сценариев с клавиатуры и скринридера для уровня `GOLD`.",
+    "wcag_3_0_tier": "GOLD",
+    "iso_9241_110_principle": "SUITABILITY_FOR_TASK"
+  }
+]
+

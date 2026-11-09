@@ -1,0 +1,61 @@
+[
+  {
+    "id": "CWV-LCP-01",
+    "standard_family": "CORE_WEB_VITALS",
+    "category": "Runtime_Performance",
+    "title_ru": "Largest Contentful Paint (LCP <= 2500 мс) — Скорость отрисовки главного контентного блока",
+    "description_ru": "Метрика Core Web Vitals 2026: время отрисовки самого крупного видимого изображения, видеопостера или текстового блока в первом экране (LCP) не должно превышать 2500 мс (2.5 секунды) на мобильных (375x812) и десктопных (1440x900) вьюпортах. Главное изображение первого экрана обязано иметь атрибут `fetchpriority=\"high\"` и НЕ должно использовать `loading=\"lazy\"`.",
+    "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
+    "target_states": ["default", "loading_skeleton", "viewport_320px"],
+    "quantitative_threshold": {
+      "max_lcp_ms": 2500
+    },
+    "verification_modality": "AUTOMATED_RUNTIME_PERF",
+    "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
+    "playwright_check_snippet": "const lcp = window.__webVitals?.lcp_ms ?? 0; const heroImg = document.querySelector('main img, header img, img'); const lazyHero = heroImg && heroImg.getAttribute('loading') === 'lazy' && heroImg.getBoundingClientRect().top < window.innerHeight; return (lcp <= 2500 && !lazyHero) ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
+    "vision_prompt_heuristic": "Inspect the above-the-fold hero section. Verify that the primary hero image or headline renders completely without broken media placeholders or unstyled flash of text.",
+    "remediation_guide_ru": "Добавьте `fetchpriority=\"high\"` и уберите `loading=\"lazy\"` у главного LCP-изображения первого экрана, конвертируйте графику в AVIF/WebP, настройте `<link rel=\"preload\" as=\"image\">` и сократите TTFB до `< 600 мс`.",
+    "wcag_3_0_tier": "BRONZE",
+    "iso_9241_110_principle": "SUITABILITY_FOR_TASK"
+  },
+  {
+    "id": "CWV-INP-01",
+    "standard_family": "CORE_WEB_VITALS",
+    "category": "Runtime_Performance",
+    "title_ru": "Interaction to Next Paint (INP <= 200 мс) — Отзывчивость интерфейса на действия пользователя",
+    "description_ru": "Метрика Core Web Vitals 2026: задержка от момента клика, тапа или нажатия клавиши пользователем до следующей отрисовки кадра браузером (INP) должна составлять не более 200 мс. Задачи в главном потоке JavaScript (Long Animation Frames / Long Tasks) не должны блокировать рендеринг дольше 50 мс.",
+    "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
+    "target_states": ["active", "focus-visible", "default"],
+    "quantitative_threshold": {
+      "max_inp_ms": 200,
+      "max_doherty_ms": 400
+    },
+    "verification_modality": "AUTOMATED_RUNTIME_PERF",
+    "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
+    "playwright_check_snippet": "const inp = window.__webVitals?.inp_ms ?? 0; return inp <= 200 ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
+    "vision_prompt_heuristic": "Verify that interactive elements provide clean visual state transitions on focus and interaction without layout freeze or jank.",
+    "remediation_guide_ru": "Разбивайте тяжелые обработчики событий с помощью `scheduler.yield()` или `setTimeout(..., 0)`, используйте `startTransition` в React для некритичных обновлений UI и минимизируйте размер DOM-дерева (`< 1500` узлов).",
+    "wcag_3_0_tier": "SILVER",
+    "iso_9241_110_principle": "CONTROLLABILITY"
+  },
+  {
+    "id": "CWV-CLS-01",
+    "standard_family": "CORE_WEB_VITALS",
+    "category": "Runtime_Performance",
+    "title_ru": "Cumulative Layout Shift (CLS < 0.1) — Визуальная стабильность верстки без прыжков контента",
+    "description_ru": "Метрика Core Web Vitals 2026: суммарный коэффициент сдвига макета (CLS) должен быть строго меньше 0.1. Все изображения, видео, iframe, рекламные слоты и асинхронные блоки обязаны иметь явно заданные атрибуты `width` и `height` или CSS `aspect-ratio`, чтобы догрузка ресурсов или веб-шрифтов не вызывала смещения текста и кнопок под пальцем пользователя.",
+    "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
+    "target_states": ["default", "loading_skeleton", "viewport_320px"],
+    "quantitative_threshold": {
+      "max_cls": 0.1
+    },
+    "verification_modality": "AUTOMATED_RUNTIME_PERF",
+    "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
+    "playwright_check_snippet": "const cls = window.__webVitals?.cls_score ?? 0; const imgsWithoutDims = Array.from(document.querySelectorAll('img')).filter(img => !img.hasAttribute('width') && !img.hasAttribute('height') && getComputedStyle(img).aspectRatio === 'auto'); return (cls < 0.1 && imgsWithoutDims.length === 0) ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
+    "vision_prompt_heuristic": "Inspect the page layout for any overlapping banners, unreserved image containers, or late-injected top bars that push page content down.",
+    "remediation_guide_ru": "Проставьте явные `width` и `height` (или `aspect-ratio: 16 / 9`) всем тегам `<img>` и `<video>`, зарезервируйте `min-height` для динамических баннеров и скелетонов и используйте `size-adjust` для фоллбэк-шрифтов.",
+    "wcag_3_0_tier": "BRONZE",
+    "iso_9241_110_principle": "USE_ERROR_ROBUSTNESS"
+  }
+]
+

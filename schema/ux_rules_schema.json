@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://antigravity.google/schemas/ux-rules-schema-2026.json",
+  "title": "UX/UI & Accessibility Audit Rule Schema (2026 Standards)",
+  "description": "Strict validation schema for the 2026 UX/UI & Accessibility Audit Database covering WCAG 2.2/3.0, Apple HIG 26, Material 3, IBM Carbon, ISO 9241-110, Laws of UX, Baymard 2026, Microsoft HAX, Google PAIR v3, and Core Web Vitals.",
+  "type": "array",
+  "items": {
+    "$ref": "#/$defs/UxAuditRule"
+  },
+  "$defs": {
+    "UxAuditRule": {
+      "type": "object",
+      "required": [
+        "id",
+        "standard_family",
+        "category",
+        "title_ru",
+        "description_ru",
+        "legal_or_business_risk",
+        "target_states",
+        "quantitative_threshold",
+        "verification_modality",
+        "evaluation_outcomes",
+        "playwright_check_snippet",
+        "vision_prompt_heuristic",
+        "remediation_guide_ru"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Z0-9]+-[A-Z0-9._-]+$",
+          "description": "Unique rule ID (e.g. WCAG-2.4.11, BAYMARD-CHK-01, HIG-TOUCH-01, HAX-G14)"
+        },
+        "standard_family": {
+          "type": "string",
+          "enum": [
+            "WCAG_2_2",
+            "WCAG_3_0_DRAFT",
+            "MATERIAL_3",
+            "APPLE_HIG_26",
+            "IBM_CARBON",
+            "ISO_9241_110",
+            "LAWS_OF_UX",
+            "BAYMARD_2026",
+            "MICROSOFT_HAX",
+            "GOOGLE_PAIR_V3",
+            "CORE_WEB_VITALS"
+          ]
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "Accessibility",
+            "Visual_Hierarchy",
+            "Touch_Ergonomics",
+            "Forms_Checkout",
+            "Navigation_Search",
+            "Account_SelfService",
+            "Human_AI_Interaction",
+            "Runtime_Performance",
+            "Cognitive_Load"
+          ]
+        },
+        "title_ru": {
+          "type": "string",
+          "minLength": 5,
+          "description": "Concise normative rule title in Russian"
+        },
+        "description_ru": {
+          "type": "string",
+          "minLength": 20,
+          "description": "Detailed normative requirement and rationale in Russian"
+        },
+        "legal_or_business_risk": {
+          "type": "string",
+          "enum": [
+            "CRITICAL_LEGAL_EAA_ADA",
+            "HIGH_CONVERSION_BLOCKER",
+            "MEDIUM_UX_FRICTION",
+            "BEST_PRACTICE_ENHANCEMENT"
+          ]
+        },
+        "target_states": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "default",
+              "hover",
+              "focus-visible",
+              "active",
+              "disabled",
+              "loading_skeleton",
+              "error",
+              "zoom_200",
+              "viewport_320px",
+              "dark_mode",
+              "reduced_motion"
+            ]
+          }
+        },
+        "quantitative_threshold": {
+          "type": "object",
+          "description": "Explicit measurable limits for automated DOM/Runtime/Vision verification",
+          "properties": {
+            "min_target_px": { "type": "number", "minimum": 0 },
+            "recommended_pt": { "type": "number", "minimum": 0 },
+            "recommended_dp": { "type": "number", "minimum": 0 },
+            "min_gap_px": { "type": "number", "minimum": 0 },
+            "min_body_font_px": { "type": "number", "minimum": 0 },
+            "max_zoom_scale_pct": { "type": "number", "minimum": 100 },
+            "max_lcp_ms": { "type": "number", "minimum": 0 },
+            "max_inp_ms": { "type": "number", "minimum": 0 },
+            "max_cls": { "type": "number", "minimum": 0 },
+            "max_doherty_ms": { "type": "number", "minimum": 0 },
+            "min_contrast_text": { "type": "number", "minimum": 1 },
+            "min_contrast_ui": { "type": "number", "minimum": 1 },
+            "line_height_multiplier": { "type": "number", "minimum": 1 },
+            "paragraph_spacing_multiplier": { "type": "number", "minimum": 1 },
+            "letter_spacing_em": { "type": "number", "minimum": 0 },
+            "word_spacing_em": { "type": "number", "minimum": 0 },
+            "max_primary_cta_per_viewport": { "type": "integer", "minimum": 1 },
+            "max_label_to_field_distance_ratio": { "type": "number", "minimum": 0, "maximum": 1 },
+            "chunk_size_digits": { "type": "integer", "minimum": 1 }
+          },
+          "additionalProperties": {
+            "type": ["number", "string", "boolean"]
+          }
+        },
+        "verification_modality": {
+          "type": "string",
+          "enum": [
+            "AUTOMATED_DOM",
+            "AUTOMATED_RUNTIME_PERF",
+            "AI_MULTIMODAL_VISION",
+            "MANUAL_INTERACTIVE"
+          ]
+        },
+        "evaluation_outcomes": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "enum": [
+              "APPLIED_PASS",
+              "VIOLATED_FAIL",
+              "DOES_NOT_APPLY"
+            ]
+          }
+        },
+        "playwright_check_snippet": {
+          "type": "string",
+          "minLength": 10,
+          "description": "Executable JS/TS Playwright assertion snippet for DOM/CSS/Runtime verification"
+        },
+        "vision_prompt_heuristic": {
+          "type": "string",
+          "minLength": 10,
+          "description": "Specific instruction for Gemini Multimodal Vision to evaluate on a screenshot"
+        },
+        "remediation_guide_ru": {
+          "type": "string",
+          "minLength": 15,
+          "description": "Actionable code and design fix in Russian"
+        },
+        "wcag_3_0_tier": {
+          "type": "string",
+          "enum": ["BRONZE", "SILVER", "GOLD"]
+        },
+        "iso_9241_110_principle": {
+          "type": "string",
+          "enum": [
+            "SUITABILITY_FOR_TASK",
+            "SELF_DESCRIPTIVENESS",
+            "CONFORMITY_WITH_USER_EXPECTATIONS",
+            "LEARNER_SUPPORT",
+            "CONTROLLABILITY",
+            "USE_ERROR_ROBUSTNESS",
+            "USER_ENGAGEMENT"
+          ]
+        }
+      }
+    }
+  }
+}
+

@@ -1,0 +1,25 @@
+{
+  "name": "ux-ui-accessibility-audit-engine-2026",
+  "version": "1.0.0",
+  "description": "Production-grade 2026 UX/UI & Accessibility Audit Database, Hybrid Playwright + Axe + Web Vitals + Gemini Vision Runner, and Antigravity MCP Server",
+  "type": "module",
+  "scripts": {
+    "seed:db": "node --experimental-strip-types database/init_db.ts",
+    "validate:schema": "node --experimental-strip-types schema/validate_seeds.ts",
+    "audit": "node --experimental-strip-types engine/auditor.ts",
+    "mcp:start": "node --experimental-strip-types mcp-server/index.ts",
+    "mcp:test": "node --experimental-strip-types mcp-server/index.ts --self-test"
+  },
+  "dependencies": {
+    "@axe-core/playwright": "^4.10.1",
+    "@google/genai": "^0.1.1",
+    "@modelcontextprotocol/sdk": "^1.0.1",
+    "ajv": "^8.17.1",
+    "playwright": "^1.49.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "typescript": "^5.6.3"
+  }
+}

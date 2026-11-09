@@ -1,0 +1,33 @@
+name: UX/UI Audit Knowledge Base & Engine CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  validate-and-test:
+    name: Validate Schema, Build SQLite & Run Self-Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 22 (with native node:sqlite & strip-types)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.12.0"
+
+      - name: Validate all 6 JSON seed modules against ux_rules_schema.json
+        run: npm run validate:schema
+
+      - name: Compile and seed SQLite3 FTS5 database
+        run: npm run seed:db
+
+      - name: Verify MCP Server tools (query_ux_rules, get_rule_by_id, generate_component_checklist)
+        run: npm run mcp:test
+
+      - name: Run Hybrid UX/UI Audit Runner self-test across 3 viewports
+        run: npm run audit -- --self-test

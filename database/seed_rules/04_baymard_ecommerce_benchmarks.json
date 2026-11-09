@@ -1,0 +1,120 @@
+[
+  {
+    "id": "BAYMARD-CHK-01",
+    "standard_family": "BAYMARD_2026",
+    "category": "Forms_Checkout",
+    "title_ru": "Автоформатирование номера банковской карты группами по 4 цифры с пробелами (Baymard Checkout)",
+    "description_ru": "Согласно исследованиям Baymard Institute (2025–2026), опечатки при вводе 16-значного номера карты без пробелов являются одной из главных причин отказов при оплате. Поле номера карты обязано принимать пробелы при вводе/вставке и автоматически форматировать цифры в группы по 4 знака (`4444 4444 4444 4444`, или `4-6-5` для Amex), используя `inputmode=\"numeric\"` и `autocomplete=\"cc-number\"`.",
+    "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
+    "target_states": ["default", "focus-visible", "error"],
+    "quantitative_threshold": {
+      "chunk_size_digits": 4,
+      "min_maxlength_with_spaces": 19
+    },
+    "verification_modality": "AUTOMATED_DOM",
+    "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
+    "playwright_check_snippet": "const ccInputs = Array.from(document.querySelectorAll('input[autocomplete=\"cc-number\"], input[name*=\"card\" i], input[id*=\"card\" i]')); if (ccInputs.length === 0) return 'DOES_NOT_APPLY'; const valid = ccInputs.every(el => { const maxLen = el.maxLength; return (maxLen === -1 || maxLen >= 19) && el.type !== 'number'; }); return valid ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
+    "vision_prompt_heuristic": "If a payment or credit card form is visible on the screenshot, check whether the card number input displays a 4-digit chunked format mask (e.g., '0000 0000 0000 0000') and card network icon. If no payment form is present, return DOES_NOT_APPLY.",
+    "remediation_guide_ru": "Используйте `<input type=\"text\" inputmode=\"numeric\" autocomplete=\"cc-number\" maxlength=\"23\" placeholder=\"0000 0000 0000 0000\" />` (никогда не используйте `type=\"number\"`) и функцию автоформатирования: `val.replace(/\\D/g, '').replace(/(\\d{4})(?=\\d)/g, '$1 ')`.",
+    "wcag_3_0_tier": "SILVER",
+    "iso_9241_110_principle": "USE_ERROR_ROBUSTNESS"
+  },
+  {
+    "id": "BAYMARD-CHK-02",
+    "standard_family": "BAYMARD_2026",
+    "category": "Forms_Checkout",
+    "title_ru": "Паттерн «Fake Editing Flow» для обновления сохраненных карт (без принудительного удаления)",
+    "description_ru": "Из-за ограничений PCI DSS платежные шлюзы часто не позволяют редактировать токен карты напрямую. Однако заставлять пользователя сначала удалять карту, а затем добавлять новую — серьезная UX-ошибка. По стандарту Baymard необходимо реализовать «Fake Editing Flow»: кнопка «Изменить» открывает предзаполненную форму (срок действия, имя, адрес или новый номер), при сохранении которой создается новый токен, а старый токен автоматически удаляется в фоне.",
+    "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
+    "target_states": ["default", "active"],
+    "quantitative_threshold": {
+      "require_edit_button_on_saved_cards": true
+    },
+    "verification_modality": "AI_MULTIMODAL_VISION",
+    "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
+    "playwright_check_snippet": "const savedCards = Array.from(document.querySelectorAll('[class*=\"saved-card\" i], [data-testid*=\"payment-method\" i]')); if (savedCards.length === 0) return 'DOES_NOT_APPLY'; const hasEdit = savedCards.every(card => /edit|изменить|редактировать/i.test(card.textContent || '')); return hasEdit ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
+    "vision_prompt_heuristic": "If stored payment methods or saved credit cards are shown, verify that each saved card provides an explicit 'Edit' ('Изменить') action alongside 'Remove', rather than only showing a 'Delete' button. If no saved payment methods exist on the page, return DOES_NOT_APPLY.",
+    "remediation_guide_ru": "Добавьте кнопку `«Изменить»` к каждой сохраненной карте. При сохранении изменений отправляйте запрос на выпуск нового платежного токена и после успешного ответа вызывайте удаление прежнего токена (`DELETE /payment-methods/:oldId`).",
+    "wcag_3_0_tier": "SILVER",
+    "iso_9241_110_principle": "SUITABILITY_FOR_TASK"
+  },
+  {
+    "id": "BAYMARD-PDP-01",
+    "standard_family": "BAYMARD_2026",
+    "category": "Visual_Hierarchy",
+    "title_ru": "Отказ от горизонтальных вкладок (Horizontal Tabs) для основных секций карточки товара (PDP)",
+    "description_ru": "Исследования айтрекинга Baymard показывают, что 27% пользователей не замечают контент, скрытый в горизонтальных вкладках (Описание, Характеристики, Отзывы, Вопросы, Доставка) на странице товара. Основные секции PDP должны располагаться вертикальным стеком (одна под другой) с липкой панелью якорной навигации (Sticky Jump-Links) или раскрывающимися аккордеонами на мобильных экранах.",
+    "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
+    "target_states": ["default", "viewport_320px"],
+    "quantitative_threshold": {
+      "max_hidden_pdp_tabs": 0
+    },
+    "verification_modality": "AI_MULTIMODAL_VISION",
+    "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
+    "playwright_check_snippet": "const isPdp = !!document.querySelector('[itemtype*=\"Product\"], [data-page-type=\"product\"], button[name*=\"add-to-cart\" i]'); if (!isPdp) return 'DOES_NOT_APPLY'; const tabPanelsHidden = Array.from(document.querySelectorAll('[role=\"tabpanel\"][hidden], .tab-pane:not(.active)')); return tabPanelsHidden.length === 0 ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
+    "vision_prompt_heuristic": "If the page is an e-commerce Product Detail Page (PDP), check how Product Description, Specifications, and Customer Reviews are laid out. Fail if they are hidden behind horizontal tabs where only one tab's content is visible at a time; pass if they are vertically stacked or accessible via jump-links. If not a PDP, return DOES_NOT_APPLY.",
+    "remediation_guide_ru": "Замените `<Tabs>` на странице товара на вертикально расположенные секции `<section id='specs'>`, `<section id='reviews'>` с плавающей панелью быстрых якорей (`position: sticky; top: 64px;`) для мгновенного скролла к нужному разделу.",
+    "wcag_3_0_tier": "SILVER",
+    "iso_9241_110_principle": "SELF_DESCRIPTIVENESS"
+  },
+  {
+    "id": "BAYMARD-PDP-02",
+    "standard_family": "BAYMARD_2026",
+    "category": "Visual_Hierarchy",
+    "title_ru": "Явная индикация скрытых миниатюр в галерее изображений товара (Signposting Hidden Thumbnails)",
+    "description_ru": "В галереях изображений товара никогда не следует обрезать ленту миниатюр ровно по границе целой карточки без визуального сигнала, что фото больше. Необходимо всегда явно показывать наличие дополнительных снимков: через бейдж `+N фото`, частичное обрезание крайней миниатюры (`overflow-peek` на 30–40%) или постоянный счетчик `1 / 8`.",
+    "legal_or_business_risk": "MEDIUM_UX_FRICTION",
+    "target_states": ["default", "viewport_320px"],
+    "quantitative_threshold": {
+      "require_gallery_signposting": true
+    },
+    "verification_modality": "AI_MULTIMODAL_VISION",
+    "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
+    "playwright_check_snippet": "const galleries = document.querySelectorAll('[class*=\"gallery\" i], [class*=\"carousel\" i], [data-testid*=\"gallery\" i]'); if (galleries.length === 0) return 'DOES_NOT_APPLY'; return 'APPLIED_PASS';",
+    "vision_prompt_heuristic": "If an image gallery or media carousel is present on the page, check whether additional hidden images are clearly signposted via a '+N more' badge, a partially cut-off next thumbnail, or a '1/N' counter. If no image gallery exists, return DOES_NOT_APPLY.",
+    "remediation_guide_ru": "Ограничьте видимый ряд миниатюр с наложением бейджа `+4 еще` на последнюю миниатюру, либо на мобильных устройствах задайте `grid-auto-columns: 82%` для главного слайда, чтобы край следующего изображения всегда выглядывал на экран.",
+    "wcag_3_0_tier": "SILVER",
+    "iso_9241_110_principle": "SELF_DESCRIPTIVENESS"
+  },
+  {
+    "id": "BAYMARD-NAV-01",
+    "standard_family": "BAYMARD_2026",
+    "category": "Navigation_Search",
+    "title_ru": "Панель активных фильтров («Applied Filters» Overview Bar) и поддержка 8 типов поисковых запросов",
+    "description_ru": "В каталогах и поиске выбранные пользователем фильтры не должны оставаться только внутри свернутых аккордеонов сайдбара: над списком товаров обязана отображаться сводная панель `«Примененные фильтры»` с кнопками удаления каждого чипса (`×`) и кнопкой `«Сбросить все»`. Поисковая строка должна корректно обрабатывать все 8 базовых типов запросов Baymard: 1) Точный товар/модель, 2) Тип/категория, 3) Симптом/проблема, 4) Совместимость, 5) Характеристика/атрибут, 6) Цена/скидка, 7) Бренд и 8) Запросы с опечатками/синонимами.",
+    "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
+    "target_states": ["default", "viewport_320px"],
+    "quantitative_threshold": {
+      "core_search_query_types_supported": 8,
+      "require_applied_filters_bar": true
+    },
+    "verification_modality": "AI_MULTIMODAL_VISION",
+    "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
+    "playwright_check_snippet": "const hasSearchOrFilter = document.querySelector('input[type=\"search\"], [role=\"search\"], [class*=\"filter\" i]'); if (!hasSearchOrFilter) return 'DOES_NOT_APPLY'; return 'APPLIED_PASS';",
+    "vision_prompt_heuristic": "If the page contains product listings, data tables with filters, or a search bar, verify that active filters are summarized in a clear horizontal chip bar above the results with a 'Clear all' option, and the search input clearly communicates what users can search for. If no search or filtering UI exists, return DOES_NOT_APPLY.",
+    "remediation_guide_ru": "Выведите над сеткой результатов блок `<AppliedFiltersBar filters={activeFilters} onRemove={...} onClearAll={...} />` и настройте поисковый индекс (Typesense / Elasticsearch / Векторный гибридный поиск) на разбор атрибутов, синонимов, ценовых модификаторов («до 5000 руб») и симптоматических запросов.",
+    "wcag_3_0_tier": "SILVER",
+    "iso_9241_110_principle": "CONTROLLABILITY"
+  },
+  {
+    "id": "BAYMARD-ACC-01",
+    "standard_family": "BAYMARD_2026",
+    "category": "Account_SelfService",
+    "title_ru": "Выпадающее меню «Мой аккаунт» (7 ключевых путей с иерархией) и встроенный трекинг заказа (6 деталей + статус Cancellation Requested)",
+    "description_ru": "По стандарту Baymard Account Self-Service: 1) Выпадающее меню «Профиль / Мой аккаунт» должно предоставлять прямой доступ к 7 ключевым разделам (Заказы, Возвраты, Адреса, Способы оплаты, Настройки профиля, Избранное/Списки, Выход) с визуальным разделением первичных и вторичных путей. 2) Страница заказа обязана отображать все 6 деталей доставки прямо на сайте (без редиректа на сайт курьерской службы: текущий статус, дата доставки, история чекпоинтов, адрес, трек-номер, состав посылки) и поддерживать промежуточный статус `«Запрошена отмена» (Cancellation Requested)`, если мгновенная отмена на складе невозможна.",
+    "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
+    "target_states": ["default", "focus-visible"],
+    "quantitative_threshold": {
+      "account_dropdown_core_paths": 7,
+      "onsite_order_tracking_details": 6
+    },
+    "verification_modality": "AI_MULTIMODAL_VISION",
+    "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
+    "playwright_check_snippet": "const accountTrigger = document.querySelector('[href*=\"account\"], [href*=\"profile\"], [href*=\"orders\"], [aria-label*=\"аккаунт\" i], [aria-label*=\"профиль\" i]'); if (!accountTrigger) return 'DOES_NOT_APPLY'; return 'APPLIED_PASS';",
+    "vision_prompt_heuristic": "If an Account menu, user profile dashboard, or Order Tracking view is visible on the page, check whether the 7 core self-service paths (Orders, Returns, Addresses, Payments, Settings, Lists, Sign Out) are structured with clear visual hierarchy, and whether order tracking shows full on-site progress and a 'Cancel / Cancellation Requested' workflow. If no account or order UI is present, return DOES_NOT_APPLY.",
+    "remediation_guide_ru": "Включите в меню профиля все 7 базовых разделов (выделив «Мои заказы» и «Возвраты» в верхнюю приоритетную группу), интегрируйте вебхуки курьерских служб для отображения 6 параметров трекинга внутри личного кабинета и добавьте статус `CANCELLATION_REQUESTED` в конечный автомат заказа.",
+    "wcag_3_0_tier": "SILVER",
+    "iso_9241_110_principle": "SUITABILITY_FOR_TASK"
+  }
+]
+
