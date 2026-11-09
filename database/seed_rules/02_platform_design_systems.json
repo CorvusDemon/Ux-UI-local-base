@@ -3,8 +3,8 @@
     "id": "HIG-TOUCH-01",
     "standard_family": "APPLE_HIG_26",
     "category": "Touch_Ergonomics",
-    "title_ru": "Минимальная сенсорная область нажатия 44x44pt (Apple HIG Ergonomic Floor)",
-    "description_ru": "В соответствии с Apple Human Interface Guidelines (iOS 26 / iPadOS 26 / visionOS) все интерактивные элементы управления (кнопки, иконки навигации, переключатели, ячейки списков и ссылки в мобильной верстке) обязаны иметь физическую область касания не менее 44x44pt (44x44 CSS px), чтобы исключить промахи при нажатии подушечкой большого пальца.",
+    "title": "Minimum Touch Target Size of 44x44pt (Apple HIG Ergonomic Floor)",
+    "description": "In accordance with Apple Human Interface Guidelines (iOS 26 / iPadOS 26 / visionOS), all interactive controls (buttons, navigation icons, toggles, list rows, and mobile links) must provide a minimum hit area of 44x44pt (44x44 CSS px) to prevent thumb mis-taps.",
     "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
     "target_states": ["default", "active", "viewport_320px"],
     "quantitative_threshold": {
@@ -15,7 +15,7 @@
     "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
     "playwright_check_snippet": "const controls = Array.from(document.querySelectorAll('button, [role=\"button\"], input[type=\"submit\"], input[type=\"checkbox\"], input[type=\"radio\"], nav a')).filter(el => { const s = getComputedStyle(el); return s.display !== 'none' && s.visibility !== 'hidden'; }); if (!controls.length) return 'DOES_NOT_APPLY'; const failing = controls.filter(el => { const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0 && (r.width < 44 || r.height < 44); }); return failing.length === 0 ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
     "vision_prompt_heuristic": "On the mobile (375x812) screenshot, inspect all interactive buttons, header icons, filter pills, and form controls. Verify whether each interactive target provides a comfortable 44x44pt hit area for thumb interaction.",
-    "remediation_guide_ru": "Установите `min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center;` для всех кнопок, иконок тулбара и пунктов мобильной навигации.",
+    "remediation_guide": "Set `min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center;` on all buttons, toolbar icons, and mobile navigation items.",
     "wcag_3_0_tier": "SILVER",
     "iso_9241_110_principle": "USE_ERROR_ROBUSTNESS"
   },
@@ -23,8 +23,8 @@
     "id": "M3-TOUCH-01",
     "standard_family": "MATERIAL_3",
     "category": "Touch_Ergonomics",
-    "title_ru": "Сенсорная цель 48x48dp и минимальный зазор >= 8px между интерактивными элементами (Material 3)",
-    "description_ru": "Согласно спецификации Google Material Design 3, интерактивные компоненты должны иметь область касания 48x48dp (CSS px) и разделяться свободным неинтерактивным зазором не менее 8px по вертикали и горизонтали, чтобы предотвратить случайное нажатие соседней кнопки (особенно для деструктивных и финальных действий).",
+    "title": "48x48dp Touch Target & >= 8px Inter-Target Spacing Gap (Material Design 3)",
+    "description": "Under Google Material Design 3 specifications, interactive components should maintain a 48x48dp (CSS px) touch target separated by at least 8px of non-interactive clearance vertically and horizontally to prevent accidental activation of adjacent controls.",
     "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
     "target_states": ["default", "hover", "active", "viewport_320px"],
     "quantitative_threshold": {
@@ -35,7 +35,7 @@
     "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
     "playwright_check_snippet": "const btns = Array.from(document.querySelectorAll('button, [role=\"button\"], a.btn')).filter(el => el.getBoundingClientRect().width > 0); if (btns.length < 2) return 'DOES_NOT_APPLY'; for (let i = 0; i < btns.length; i++) { const a = btns[i].getBoundingClientRect(); for (let j = i + 1; j < btns.length; j++) { const b = btns[j].getBoundingClientRect(); const dx = Math.max(0, Math.max(a.left - b.right, b.left - a.right)); const dy = Math.max(0, Math.max(a.top - b.bottom, b.top - a.bottom)); if (dx < 8 && dy < 8 && (dx > 0 || dy > 0)) return 'VIOLATED_FAIL'; } } return 'APPLIED_PASS';",
     "vision_prompt_heuristic": "Examine adjacent action buttons, icon toolbars, and pagination links. Verify that interactive targets have at least 8px of clear separation and do not touch edge-to-edge without padding.",
-    "remediation_guide_ru": "Используйте `gap: 8px` (или `0.5rem` / `12px`) на всех flex/grid контейнерах групп кнопок, чипсов и панелей действий, а для основных кнопок задайте `min-height: 48px`.",
+    "remediation_guide": "Apply `gap: 8px` (or `0.5rem` / `12px`) on all flex/grid containers holding button groups, filter chips, or action bars, and size primary touch controls at `min-height: 48px`.",
     "wcag_3_0_tier": "SILVER",
     "iso_9241_110_principle": "USE_ERROR_ROBUSTNESS"
   },
@@ -43,8 +43,8 @@
     "id": "HIG-TYPE-01",
     "standard_family": "APPLE_HIG_26",
     "category": "Visual_Hierarchy",
-    "title_ru": "Минимальный порог читаемости основного текста >= 17pt/px (Typography Legibility Floor)",
-    "description_ru": "Apple HIG устанавливает базовый размер основного текста (Body) на уровне 17pt (17px в веб-эквиваленте) при комфортной длине строки 50–75 символов. Использование шрифта менее 16–17px для основного текстового контента и полей ввода снижает скорость чтения и провоцирует принудительный авто-зум в iOS Safari.",
+    "title": "Body Typography Legibility Floor >= 17pt/px (Apple HIG)",
+    "description": "Apple HIG defines the default Body text size at 17pt (17px web equivalent) with an optimal measure of 50–75 characters per line. Using font sizes smaller than 16–17px for primary body copy or form inputs reduces reading speed and triggers forced viewport auto-zoom in iOS Safari.",
     "legal_or_business_risk": "MEDIUM_UX_FRICTION",
     "target_states": ["default", "viewport_320px"],
     "quantitative_threshold": {
@@ -55,7 +55,7 @@
     "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
     "playwright_check_snippet": "const paragraphs = Array.from(document.querySelectorAll('main p, article p, body p')).filter(p => p.textContent && p.textContent.trim().length > 40); if (!paragraphs.length) return 'DOES_NOT_APPLY'; const avgSize = paragraphs.reduce((acc, p) => acc + parseFloat(getComputedStyle(p).fontSize), 0) / paragraphs.length; return avgSize >= 17 ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
     "vision_prompt_heuristic": "Evaluate the body copy and form input typography. Check whether the primary reading text feels legible (>= 17px) with clear hierarchy between headings, body text, and secondary captions.",
-    "remediation_guide_ru": "Задайте базовый размер шрифта для основного контента `font-size: 1.0625rem` (`17px`) с `line-height: 1.5`, а для всех элементов `<input>`, `<select>` и `<textarea>` — не менее `16px` (`1rem`), чтобы предотвратить нежелательный авто-зум экрана в iOS.",
+    "remediation_guide": "Set primary body copy to `font-size: 1.0625rem` (`17px`) with `line-height: 1.5`, and ensure all `<input>`, `<select>`, and `<textarea>` elements use at least `16px` (`1rem`) to prevent unintended iOS auto-zoom.",
     "wcag_3_0_tier": "SILVER",
     "iso_9241_110_principle": "SUITABILITY_FOR_TASK"
   },
@@ -63,8 +63,8 @@
     "id": "HIG-TYPE-02",
     "standard_family": "APPLE_HIG_26",
     "category": "Accessibility",
-    "title_ru": "Масштабирование Dynamic Type до 200% без обрезания текста (No Text Clipping)",
-    "description_ru": "При увеличении базового размера шрифта (Dynamic Type / масштабирование текста в браузере до 200%) контейнеры, карточки, модальные окна и кнопки должны эластично увеличиваться по высоте и перестраивать горизонтальные списки в вертикальный стек без усечения смыслового текста многоточием (`text-overflow: ellipsis`) или скрытия за `overflow: hidden`.",
+    "title": "Dynamic Type Scaling Up to 200% Without Text Clipping",
+    "description": "When the root font size scales up to 200% (Dynamic Type or browser zoom), containers, cards, modals, and buttons must expand vertically and reflow horizontal rows into vertical stacks without truncating meaningful text via `text-overflow: ellipsis` or clipping content behind `overflow: hidden`.",
     "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
     "target_states": ["zoom_200", "viewport_320px"],
     "quantitative_threshold": {
@@ -75,7 +75,7 @@
     "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
     "playwright_check_snippet": "const origFontSize = document.documentElement.style.fontSize; document.documentElement.style.fontSize = '200%'; const clipped = Array.from(document.querySelectorAll('h1, h2, h3, p, button, a, label')).filter(el => { const cs = getComputedStyle(el); return (cs.overflow === 'hidden' || cs.textOverflow === 'ellipsis') && (el.scrollWidth > el.clientWidth + 4 || el.scrollHeight > el.clientHeight + 4); }); document.documentElement.style.fontSize = origFontSize; return clipped.length === 0 ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
     "vision_prompt_heuristic": "Inspect the page under 200% text scaling or 320px reflow. Identify any truncated button labels, cut-off headings, or overlapping badge text.",
-    "remediation_guide_ru": "Определяйте все типографические размеры и отступы в `rem`, избегайте `white-space: nowrap` на кнопках и заголовках карточек и используйте CSS-медиазапросы или `flex-wrap: wrap` для перехода от горизонтальной раскладки к вертикальной при крупном шрифте.",
+    "remediation_guide": "Define all typographic scales and spacing tokens in `rem`, avoid `white-space: nowrap` on buttons and card titles, and use `flex-wrap: wrap` so horizontal layouts stack vertically at large text sizes.",
     "wcag_3_0_tier": "SILVER",
     "iso_9241_110_principle": "CONTROLLABILITY"
   },
@@ -83,8 +83,8 @@
     "id": "HIG-GLASS-01",
     "standard_family": "APPLE_HIG_26",
     "category": "Visual_Hierarchy",
-    "title_ru": "Безопасность контраста на полупрозрачных поверхностях Liquid Glass / Acrylic (>= 4.5:1)",
-    "description_ru": "При использовании материалов Apple iOS 26 Liquid Glass или Material 3 Translucent Surfaces (`backdrop-filter: blur(...)`) поверх динамического контента, фотографий или градиентов необходимо гарантировать, что контраст текста остается не ниже 4.5:1 (и 3.0:1 для иконок) при прокрутке любого фонового изображения за счет адаптивной подложки (scrim/tint) и достаточного коэффициента непрозрачности (`alpha >= 0.72`).",
+    "title": "Liquid Glass & Translucent Surface Contrast Safety (>= 4.5:1)",
+    "description": "When using Apple iOS 26 Liquid Glass or Material 3 translucent surfaces (`backdrop-filter: blur(...)`) over dynamic content, photography, or gradients, text contrast must remain >= 4.5:1 (>= 3.0:1 for UI icons) across any scrolled background via an adaptive scrim/tint layer (`alpha >= 0.72`).",
     "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
     "target_states": ["default", "dark_mode"],
     "quantitative_threshold": {
@@ -96,7 +96,7 @@
     "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
     "playwright_check_snippet": "const glassEls = Array.from(document.querySelectorAll('*')).filter(el => { const cs = getComputedStyle(el); return (cs.backdropFilter && cs.backdropFilter !== 'none') || (cs.webkitBackdropFilter && cs.webkitBackdropFilter !== 'none'); }); if (glassEls.length === 0) return 'DOES_NOT_APPLY'; const unsafe = glassEls.filter(el => { const bg = getComputedStyle(el).backgroundColor; return bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent'; }); return unsafe.length === 0 ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
     "vision_prompt_heuristic": "Locate any translucent/blurred glassmorphic headers, cards, toolbars, or overlays (Liquid Glass style). If none exist, return DOES_NOT_APPLY. If present, evaluate whether background colors or images bleed through and reduce text legibility below 4.5:1 contrast.",
-    "remediation_guide_ru": "Всегда комбинируйте `backdrop-filter: blur(20px) saturate(180%)` с защитным полупрозрачным фоновым тоном (`background-color: rgba(255, 255, 255, 0.78)` в светлой теме и `rgba(24, 24, 28, 0.82)` в темной теме) и тонкой контурной рамкой `1px solid rgba(255,255,255,0.2)`.",
+    "remediation_guide": "Always pair `backdrop-filter: blur(20px) saturate(180%)` with a protective semi-opaque surface tint (`background-color: rgba(255, 255, 255, 0.78)` in light mode and `rgba(24, 24, 28, 0.82)` in dark mode) plus a subtle `1px solid rgba(255, 255, 255, 0.2)` border.",
     "wcag_3_0_tier": "SILVER",
     "iso_9241_110_principle": "SELF_DESCRIPTIVENESS"
   },
@@ -104,8 +104,8 @@
     "id": "HIG-GLASS-02",
     "standard_family": "APPLE_HIG_26",
     "category": "Accessibility",
-    "title_ru": "Адаптация Liquid Glass и анимаций к prefers-reduced-transparency и prefers-reduced-motion",
-    "description_ru": "Интерфейсы с полупрозрачными размытыми поверхностями (Liquid Glass), параллаксом и пружинными анимациями обязаны учитывать системные настройки доступности `@media (prefers-reduced-transparency: reduce)` (переключая фон на полностью непрозрачный солид) и `@media (prefers-reduced-motion: reduce)` (отключая инерционные смещения, автовоспроизведение и блики).",
+    "title": "Liquid Glass & Motion Adaptation for prefers-reduced-transparency & prefers-reduced-motion",
+    "description": "Interfaces employing translucent blurred surfaces (Liquid Glass), parallax, or spring physics must honor `@media (prefers-reduced-transparency: reduce)` (falling back to an opaque solid surface) and `@media (prefers-reduced-motion: reduce)` (disabling inertial translations, autoplay effects, and specular shimmer).",
     "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
     "target_states": ["reduced_motion", "dark_mode"],
     "quantitative_threshold": {
@@ -116,7 +116,7 @@
     "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
     "playwright_check_snippet": "const sheets = Array.from(document.styleSheets); let hasReducedMotionRule = false; for (const sheet of sheets) { try { for (const rule of Array.from(sheet.cssRules || [])) { if (rule.cssText && rule.cssText.includes('prefers-reduced-motion')) { hasReducedMotionRule = true; break; } } } catch (e) {} } return hasReducedMotionRule ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
     "vision_prompt_heuristic": "Verify that motion/blur effects do not cause visual disorientation or vestibular strain, and check whether static high-contrast fallbacks are cleanly rendered when reduced motion is active.",
-    "remediation_guide_ru": "Добавьте в глобальный CSS: `@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }` и `@media (prefers-reduced-transparency: reduce) { .glass-surface { backdrop-filter: none !important; background-color: var(--surface-solid) !important; } }`.",
+    "remediation_guide": "Add global CSS media queries: `@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }` and `@media (prefers-reduced-transparency: reduce) { .glass-surface { backdrop-filter: none !important; background-color: var(--surface-solid) !important; } }`.",
     "wcag_3_0_tier": "GOLD",
     "iso_9241_110_principle": "CONTROLLABILITY"
   },
@@ -124,8 +124,8 @@
     "id": "CARBON-STATE-01",
     "standard_family": "IBM_CARBON",
     "category": "Visual_Hierarchy",
-    "title_ru": "Полнота пустых состояний (Empty States с объяснением и целевым действием CTA)",
-    "description_ru": "По стандарту IBM Carbon Design System пустые контейнеры данных (таблицы, списки заказов, корзина, результаты поиска, дашборды) никогда не должны отображаться как пустое белое пятно или сухой текст «Нет данных». Пустое состояние обязано содержать: 1) понятный заголовок причины, 2) краткую подсказку что делать дальше и 3) кнопку прямого целевого действия (например, «Сбросить фильтры» или «Создать первый проект»).",
+    "title": "Actionable Empty States With Clear Explanation & Primary CTA (IBM Carbon)",
+    "description": "Per IBM Carbon Design System component completeness rules, empty data containers (tables, order lists, carts, search results, dashboards) must never render as blank whitespace or raw 'No data' text. Every empty state must provide: 1) a clear heading explaining why it is empty, 2) guidance on what to do next, and 3) a direct suggested action button (e.g., 'Reset Filters' or 'Create First Project').",
     "legal_or_business_risk": "MEDIUM_UX_FRICTION",
     "target_states": ["default", "error"],
     "quantitative_threshold": {
@@ -135,7 +135,7 @@
     "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
     "playwright_check_snippet": "const emptyBlocks = Array.from(document.querySelectorAll('[class*=\"empty\" i], [data-testid*=\"empty\" i]')); if (emptyBlocks.length === 0) return 'DOES_NOT_APPLY'; const hasAction = emptyBlocks.every(el => el.querySelector('button, a[href]')); return hasAction ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
     "vision_prompt_heuristic": "Look for any empty lists, zero-result search areas, empty carts, or blank dashboard widgets. If all containers are populated with normal content, return DOES_NOT_APPLY. If an empty state is shown, verify that it includes a clear explanation AND an actionable button/link.",
-    "remediation_guide_ru": "Спроектируйте компонент `<EmptyState title='Ничего не найдено' description='Попробуйте изменить параметры фильтрации' action={<Button>Сбросить фильтры</Button>} />` для всех списков, таблиц и виджетов.",
+    "remediation_guide": "Implement a structured `<EmptyState title='No matching items found' description='Try adjusting or clearing your active filters' action={<Button>Reset Filters</Button>} />` for all lists, tables, and dashboard widgets.",
     "wcag_3_0_tier": "SILVER",
     "iso_9241_110_principle": "LEARNER_SUPPORT"
   },
@@ -143,8 +143,8 @@
     "id": "CARBON-STATE-02",
     "standard_family": "IBM_CARBON",
     "category": "Runtime_Performance",
-    "title_ru": "Скелетонная загрузка вместо блокирующих спиннеров (Skeleton Loading States)",
-    "description_ru": "В соответствии с IBM Carbon для загрузки контента длительностью более 300 мс вместо полноэкранных спиннеров или пустых блоков должны применяться скелетонные плейсхолдеры (`loading_skeleton`), точно повторяющие геометрию будущих карточек, таблиц и текста, с атрибутами `aria-busy=\"true\"` и предотвращением сдвига макета (CLS).",
+    "title": "Progressive Skeleton Loading States Instead of Blocking Spinners (IBM Carbon)",
+    "description": "In accordance with IBM Carbon, content loads exceeding 300ms should render layout-matching skeleton placeholders (`loading_skeleton`) with `aria-busy=\"true\"` rather than full-screen blocking spinners or blank containers, preventing Cumulative Layout Shift (CLS).",
     "legal_or_business_risk": "MEDIUM_UX_FRICTION",
     "target_states": ["loading_skeleton", "reduced_motion"],
     "quantitative_threshold": {
@@ -155,7 +155,7 @@
     "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
     "playwright_check_snippet": "const spinners = document.querySelectorAll('[class*=\"spinner\" i], [class*=\"loader\" i]:not([class*=\"skeleton\" i])'); const skeletons = document.querySelectorAll('[class*=\"skeleton\" i], [aria-busy=\"true\"]'); if (spinners.length === 0 && skeletons.length === 0) return 'DOES_NOT_APPLY'; return skeletons.length >= spinners.length ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
     "vision_prompt_heuristic": "Check if any loading states are visible on the screen. If none are visible, return DOES_NOT_APPLY. If loading indicators are present, verify that progressive skeleton placeholders matching the layout geometry are used instead of a blocking full-screen spinner.",
-    "remediation_guide_ru": "Замените абстрактные крутящиеся индикаторы на структурные `<SkeletonPlaceholder />` тех же размеров (`width`/`height`), что и целевой компонент, добавив `aria-busy=\"true\"` на родительский контейнер.",
+    "remediation_guide": "Replace generic spinning loaders with structural `<SkeletonPlaceholder />` components matching the exact dimensions (`width`/`height`) of the target content, and set `aria-busy=\"true\"` on the loading region.",
     "wcag_3_0_tier": "SILVER",
     "iso_9241_110_principle": "CONFORMITY_WITH_USER_EXPECTATIONS"
   },
@@ -163,8 +163,8 @@
     "id": "CARBON-STATE-03",
     "standard_family": "IBM_CARBON",
     "category": "Forms_Checkout",
-    "title_ru": "Разграничение состояний Read-Only и Disabled + корректные Overflow-меню (IBM Carbon)",
-    "description_ru": "Поля только для чтения (`readonly`) должны визуально и семантически отличаться от заблокированных (`disabled`): `readonly`-элементы сохраняют нормальный контраст текста (>= 4.5:1), получают клавиатурный фокус и позволяют выделить и скопировать значение. Действия в тулбарах и таблицах, не помещающиеся на узких экранах, должны сворачиваться в доступное меню переполнения (`Overflow Menu` с `aria-haspopup=\"menu\"`).",
+    "title": "Read-Only vs Disabled State Differentiation & Responsive Overflow Menus (IBM Carbon)",
+    "description": "Read-only inputs (`readonly`) must be visually and semantically distinct from `disabled` controls: `readonly` fields retain full text contrast (>= 4.5:1), remain focusable in the keyboard Tab sequence, and allow users to select and copy values. Toolbar and table actions that do not fit on narrow viewports must collapse into an accessible Overflow Menu (`aria-haspopup=\"menu\"`).",
     "legal_or_business_risk": "MEDIUM_UX_FRICTION",
     "target_states": ["disabled", "default", "viewport_320px"],
     "quantitative_threshold": {
@@ -174,9 +174,8 @@
     "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
     "playwright_check_snippet": "const roInputs = Array.from(document.querySelectorAll('input[readonly], textarea[readonly]')); if (roInputs.length === 0) return 'DOES_NOT_APPLY'; const valid = roInputs.every(el => !el.hasAttribute('disabled') && el.tabIndex >= 0); return valid ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
     "vision_prompt_heuristic": "If disabled or read-only inputs or dense action toolbars exist on the page, verify that read-only data remains high-contrast and selectable, and excess toolbar actions collapse cleanly into an overflow ('...') menu without horizontal clipping.",
-    "remediation_guide_ru": "Для нередактируемых данных, которые нужны пользователю для чтения или копирования (например, ID заказа, токен, email), используйте `readonly` вместо `disabled` с иконкой замка и контрастом текста >= 4.5:1. Для вторичных действий карточек и таблиц применяйте `<OverflowMenu aria-label='Дополнительные действия'>`.",
+    "remediation_guide": "Use `readonly` instead of `disabled` for non-editable reference values that users need to read or copy (such as Order IDs, API tokens, or emails) with >= 4.5:1 contrast. Collapse secondary toolbar actions into `<OverflowMenu aria-label='More actions'>`.",
     "wcag_3_0_tier": "SILVER",
     "iso_9241_110_principle": "CONTROLLABILITY"
   }
 ]
-

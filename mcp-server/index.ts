@@ -87,7 +87,7 @@ export const MCP_TOOLS_MANIFEST = [
         },
         search_query: {
           type: "string",
-          description: "Free-text search in Russian or English (e.g. 'карта', 'фокус', 'Liquid Glass', 'HAX')",
+          description: "Free-text search keyword (e.g. 'card', 'focus', 'Liquid Glass', 'HAX')",
         },
       },
     },
@@ -220,11 +220,11 @@ export async function handleMcpToolCall(
                 checklist: matched.map((r) => ({
                   id: r.id,
                   standard_family: r.standard_family,
-                  title_ru: r.title_ru,
+                  title: r.title,
                   legal_or_business_risk: r.legal_or_business_risk,
                   quantitative_threshold: r.quantitative_threshold,
                   target_states: r.target_states,
-                  remediation_guide_ru: r.remediation_guide_ru,
+                  remediation_guide: r.remediation_guide,
                 })),
               },
               null,
@@ -365,7 +365,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === __filename) {
 
       const q2 = await handleMcpToolCall("get_rule_by_id", { id: "HAX-G14" });
       const parsedQ2 = JSON.parse(q2.content[0].text);
-      console.log(`Rule lookup HAX-G14: ${parsedQ2.title_ru}`);
+      console.log(`Rule lookup HAX-G14: ${parsedQ2.title}`);
 
       const q3 = await handleMcpToolCall("generate_component_checklist", {
         component_type: "checkout_form",

@@ -3,8 +3,8 @@
     "id": "HAX-G01-G02",
     "standard_family": "MICROSOFT_HAX",
     "category": "Human_AI_Interaction",
-    "title_ru": "Прозрачность возможностей и ограничений ИИ на старте (Microsoft HAX G1 & G2)",
-    "description_ru": "Согласно руководствам Microsoft Human-AI Interaction (HAX G1 «Make clear what the system can do» и G2 «Make clear how well the system can do what it can do»), интерфейс ИИ-функции обязан до начала диалога явно показать примеры поддерживаемых задач (кликабельные стартовые промпты, область компетенции) и предупредить об ограничениях точности (вероятность галлюцинаций, дата актуальности базы знаний, необходимость проверки критических фактов).",
+    "title": "Upfront AI Capability & Precision Disclosure (Microsoft HAX G1 & G2)",
+    "description": "Under Microsoft Human-AI Interaction Guidelines (HAX G1 'Make clear what the system can do' and G2 'Make clear how well the system can do what it can do'), AI-powered interfaces must communicate supported tasks upfront via clickable starter prompts/examples and explicitly state accuracy limitations (potential hallucinations, knowledge cutoff, and need to verify critical decisions).",
     "legal_or_business_risk": "MEDIUM_UX_FRICTION",
     "target_states": ["default", "focus-visible"],
     "quantitative_threshold": {
@@ -13,9 +13,9 @@
     },
     "verification_modality": "AI_MULTIMODAL_VISION",
     "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
-    "playwright_check_snippet": "const aiEls = document.querySelectorAll('[data-ai], [class*=\"ai-\" i], [class*=\"copilot\" i], [class*=\"assistant\" i], [placeholder*=\"Ask AI\" i], [placeholder*=\"Спросите ИИ\" i]'); if (aiEls.length === 0) return 'DOES_NOT_APPLY'; return 'APPLIED_PASS';",
+    "playwright_check_snippet": "const aiEls = document.querySelectorAll('[data-ai], [class*=\"ai-\" i], [class*=\"copilot\" i], [class*=\"assistant\" i], [placeholder*=\"Ask AI\" i]'); if (aiEls.length === 0) return 'DOES_NOT_APPLY'; return 'APPLIED_PASS';",
     "vision_prompt_heuristic": "Check if the page includes an AI assistant, copilot, generative search, or AI feature. If no AI feature exists on the page, return DOES_NOT_APPLY. If present, verify that it shows concrete starter prompts/examples (G1) and a clear accuracy/limitation notice (G2).",
-    "remediation_guide_ru": "Добавьте над полем ввода ИИ блок из 3–4 интерактивных чипсов с примерами запросов (`«Сравни тарифы»`, `«Суммаризируй отчет»`) и подпись под полем ввода: `«ИИ-ассистент может допускать неточности. Проверяйте важные финансовые и юридические данные»`.",
+    "remediation_guide": "Render 3–4 clickable starter prompt chips above the AI input ('Compare pricing tiers', 'Summarize report') and a persistent disclaimer below the composer: `'AI responses may contain inaccuracies. Please verify critical financial or legal facts.'`",
     "wcag_3_0_tier": "SILVER",
     "iso_9241_110_principle": "CONFORMITY_WITH_USER_EXPECTATIONS"
   },
@@ -23,8 +23,8 @@
     "id": "GENAI-STREAM-APPROVAL-01",
     "standard_family": "GOOGLE_PAIR_V3",
     "category": "Human_AI_Interaction",
-    "title_ru": "Видимый стриминг многошагового рассуждения и обязательное подтверждение человека (Human-in-the-Loop)",
-    "description_ru": "В генеративных ИИ-интерфейсах (8 GenAI UX Patterns & Google PAIR v3): 1) При генерации ответа или вызове инструментов должны отображаться потоковый вывод токенов и раскрываемый индикатор этапов (`«Анализирую запрос... -> Ищу в базе... -> Формирую ответ»`). 2) Перед выполнением любого необратимого, финансового или изменяющего внешние данные действия (отправка письма, оплата, удаление, публикация) ИИ обязан запросить явное подтверждение пользователя (`Approve / Reject`) с предпросмотром изменений.",
+    "title": "Visible Streaming Progress & Mandatory Human-in-the-Loop Approval for Consequential Actions",
+    "description": "In Generative AI interfaces (8 GenAI UX Patterns & Google PAIR v3): 1) Long-running responses and tool calls must display live token streaming and expandable multi-step progress indicators (`'Analyzing request... -> Querying database... -> Drafting response'`). 2) Before executing any consequential, financial, destructive, or external-communication AI action, the UI must require explicit human confirmation (`Approve / Cancel`) with a preview of the proposed changes.",
     "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
     "target_states": ["loading_skeleton", "active", "default"],
     "quantitative_threshold": {
@@ -35,7 +35,7 @@
     "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
     "playwright_check_snippet": "const aiEls = document.querySelectorAll('[data-ai], [class*=\"ai-\" i], [class*=\"chat\" i], [class*=\"assistant\" i]'); if (aiEls.length === 0) return 'DOES_NOT_APPLY'; return 'APPLIED_PASS';",
     "vision_prompt_heuristic": "If an AI agent or generative workflow is present on the page, check whether streaming/step-by-step progress indicators and explicit confirmation gates ('Confirm & Execute' / 'Cancel') are provided for consequential actions. If no AI workflow is present, return DOES_NOT_APPLY.",
-    "remediation_guide_ru": "Реализуйте SSE/WebSocket стриминг с компонентом `<ReasoningSteps steps={...} />` (`aria-live='polite'`) и блокирующий диалог подтверждения `<ActionApprovalCard diff={proposedChanges} onConfirm={...} onCancel={...} />` для всех tool-calls с побочными эффектами.",
+    "remediation_guide": "Stream tokens via SSE/WebSockets with `<ReasoningSteps steps={...} />` (`aria-live='polite'`) and gate all side-effecting tool calls behind an explicit `<ActionApprovalCard diff={proposedChanges} onConfirm={...} onCancel={...} />` dialog.",
     "wcag_3_0_tier": "GOLD",
     "iso_9241_110_principle": "CONTROLLABILITY"
   },
@@ -43,8 +43,8 @@
     "id": "PAIR-EXPLAIN-G11",
     "standard_family": "GOOGLE_PAIR_V3",
     "category": "Human_AI_Interaction",
-    "title_ru": "Калибровка доверия: кликабельные источники, категориальная уверенность и исключение безопасности HAX G11",
-    "description_ru": "Согласно Google PAIR v3 (Chapter 4: Explainability + Trust) и Microsoft HAX G11: 1) Каждый фактический тезис ИИ должен сопровождаться кликабельной ссылкой на первоисточник (inline-цитаты `[1]`), категориальным индикатором уверенности (`Высокая / Средняя / Низкая уверенность` вместо ложной точности `94.37%`) и объяснением на примерах. 2) Исключение HAX G11: внутренние пороги алгоритмов информационной безопасности, антифрода и антиспама НЕ должны раскрываться в UI, чтобы исключить обход защиты злоумышленниками.",
+    "title": "Calibrated Trust: Clickable Source Citations, Categorical Confidence Cues & HAX G11 Security Exception",
+    "description": "Under Google PAIR v3 (Chapter 4: Explainability + Trust) and Microsoft HAX G11: 1) AI factual claims must include clickable inline source citations (`[1]`), categorical confidence indicators (`High / Medium / Low confidence` rather than false-precision `94.37%`), and example-based explanations. 2) Per the HAX G11 exception, internal security, fraud, and anti-spam detection thresholds must NOT be exposed in the UI to prevent adversarial gaming.",
     "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
     "target_states": ["default", "hover", "focus-visible"],
     "quantitative_threshold": {
@@ -55,7 +55,7 @@
     "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
     "playwright_check_snippet": "const aiContainers = document.querySelectorAll('[data-ai-response], [class*=\"ai-response\" i], [class*=\"citation\" i]'); if (aiContainers.length === 0) return 'DOES_NOT_APPLY'; return 'APPLIED_PASS';",
     "vision_prompt_heuristic": "If AI-generated answers or recommendations are displayed on the page, verify that clickable source citations and categorical confidence cues are shown, while internal anti-fraud/security rules remain protected (HAX G11). If no AI outputs exist on the page, return DOES_NOT_APPLY.",
-    "remediation_guide_ru": "Рендерите интерактивные бейджи источников `<CitationChip href={source.url} title={source.title} />` рядом с утверждениями модели, используйте трехуровневые индикаторы уверенности (`High / Medium / Verify independently`) и скрывайте детали срабатывания антифрод-правил за общим статусным сообщением.",
+    "remediation_guide": "Render interactive `<CitationChip href={source.url} title={source.title} />` badges alongside AI claims, use 3-tier categorical confidence labels (`High / Medium / Verify independently`), and abstract internal anti-abuse triggers behind safe high-level notices.",
     "wcag_3_0_tier": "GOLD",
     "iso_9241_110_principle": "SELF_DESCRIPTIVENESS"
   },
@@ -63,8 +63,8 @@
     "id": "HAX-G14",
     "standard_family": "MICROSOFT_HAX",
     "category": "Human_AI_Interaction",
-    "title_ru": "Осторожная адаптация — Запрет перетасовки списков и меню во время чтения (Microsoft HAX G14)",
-    "description_ru": "Руководство Microsoft HAX G14 («Update and adapt cautiously») запрещает ИИ-персонализации динамически перестраивать списки, ленты товаров, результаты поиска или пункты навигационного меню в тот момент, когда пользователь смотрит на экран или ведет курсор/палец к элементу. Адаптивное обновление порядка элементов должно происходить только между сессиями или по явному нажатию кнопки «Обновить рекомендации».",
+    "title": "Cautious Adaptation — Forbid Live List & Menu Reshuffling While Reading (Microsoft HAX G14)",
+    "description": "Microsoft HAX G14 ('Update and adapt cautiously') forbids AI personalization from dynamically reordering navigation menus, product grids, or search results while the user is actively reading or moving their pointer toward a target. Adaptive ranking updates must occur only between sessions or when the user explicitly clicks a 'Refresh Recommendations' control.",
     "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
     "target_states": ["default", "hover", "active"],
     "quantitative_threshold": {
@@ -75,7 +75,7 @@
     "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
     "playwright_check_snippet": "const cls = window.__webVitals?.cls_score ?? 0; return cls < 0.1 ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
     "vision_prompt_heuristic": "Verify that recommendation feeds, navigation bars, or search lists do not abruptly reshuffle or shift under the user's pointer, and that any incoming live updates use a non-intrusive 'Show N new items' pill banner at the top.",
-    "remediation_guide_ru": "Буферизуйте асинхронные обновления персонализированных списков в фоновом стейте и отображайте ненавязчивую плашку `<Button>Показать новые рекомендации (3)</Button>` вместо принудительной пересортировки DOM на лету.",
+    "remediation_guide": "Buffer asynchronous ranking updates in background state and display a non-intrusive `<Button>Show 3 new recommendations</Button>` pill banner instead of mutating live DOM order under the user's cursor.",
     "wcag_3_0_tier": "SILVER",
     "iso_9241_110_principle": "CONTROLLABILITY"
   },
@@ -83,8 +83,8 @@
     "id": "HAX-G15-RECOVERY",
     "standard_family": "MICROSOFT_HAX",
     "category": "Human_AI_Interaction",
-    "title_ru": "Гранулярная обратная связь (HAX G15), итеративное уточнение без потери контекста и сброс памяти ИИ",
-    "description_ru": "По стандартам Microsoft HAX G15 («Encourage granular feedback») и 8 паттернам GenAI: каждый ответ ИИ должен сопровождаться контролами гранулярной обратной связи (👍/👎 с выбором причины), кнопкой повторной генерации/фоллбэка на классический интерфейс, возможностью редактировать предыдущий промпт с ветвлением истории (без потери ранних вариантов ответа) и явным контролом просмотра/очистки контекстной памяти ИИ (`Сбросить контекст / Управление памятью`).",
+    "title": "Granular Feedback (HAX G15), Non-Destructive Refinement & Explicit Context/Memory Reset",
+    "description": "Per Microsoft HAX G15 ('Encourage granular feedback') and the 8 GenAI Patterns: every AI output must provide granular feedback controls (thumbs up/down + reason tags), retry/fallback controls to standard UI, non-destructive prompt editing/branching without losing prior outputs, and an explicit control to inspect or reset AI context/memory ('Reset Context / Clear Memory').",
     "legal_or_business_risk": "MEDIUM_UX_FRICTION",
     "target_states": ["default", "focus-visible", "error"],
     "quantitative_threshold": {
@@ -95,9 +95,8 @@
     "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
     "playwright_check_snippet": "const aiUi = document.querySelectorAll('[data-ai], [class*=\"ai-\" i], [class*=\"assistant\" i]'); if (aiUi.length === 0) return 'DOES_NOT_APPLY'; return 'APPLIED_PASS';",
     "vision_prompt_heuristic": "If an AI interface is present on the page, check whether it provides: 1) thumbs-up/down feedback controls, 2) retry/regenerate or manual fallback controls, 3) non-destructive prompt editing, and 4) a clear 'Reset context / Clear memory' button. If no AI UI is present, return DOES_NOT_APPLY.",
-    "remediation_guide_ru": "Добавьте под каждым сообщением ИИ панель `<AiActionToolbar onRate={...} onRegenerate={...} onEditBranch={...} />`, а в шапке ассистента — кнопку `«Очистить контекст / Новая тема»` с индикацией объема используемой памяти.",
+    "remediation_guide": "Attach `<AiActionToolbar onRate={...} onRegenerate={...} onEditBranch={...} />` below every AI response and provide a `'Reset Context / New Session'` control in the assistant header.",
     "wcag_3_0_tier": "GOLD",
     "iso_9241_110_principle": "CONTROLLABILITY"
   }
 ]
-

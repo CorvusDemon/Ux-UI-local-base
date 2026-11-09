@@ -7,17 +7,17 @@
 [![MCP Ready](https://img.shields.io/badge/Antigravity-MCP%20Server-8A2BE2)](https://modelcontextprotocol.io/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 
-Расширяемая база знаний UX/UI и доступности (стандарты 2026 года), гибридный движок автоматизированного аудита (**Playwright + Axe-core + Core Web Vitals + Gemini Multimodal Vision**) и нативный **MCP-сервер** для **Google Antigravity IDE**, Cursor и Claude Desktop.
+A production-grade, extensible **UX/UI & Accessibility Audit Knowledge Base (2026 Standards)**, **Hybrid Automated Testing Engine** (**Playwright + Axe-core + Core Web Vitals + Gemini Multimodal Vision**), and native **Model Context Protocol (MCP) Server** for **Google Antigravity IDE**, Cursor, and Claude Desktop.
 
-Позволяет проверять как живые URL (`https://...` / `http://localhost:*`), так и локальные фронтенд-сборки на соответствие **11 семействам мировых стандартов UX/UI** (43 высокоплотных правила на русском языке с исполняемыми Playwright-пробами и визуальными эвристиками).
+Built to evaluate both live URLs (`https://...` / `http://localhost:*`) and local frontend builds against **11 global UX/UI standard families** (43 normative rules with quantitative thresholds, executable Playwright probes, and Multimodal AI Vision heuristics).
 
 ---
 
-## Архитектура системы
+## System Architecture
 
 ```mermaid
 flowchart TD
-    subgraph Corpus["1. Нормативная база знаний (/database/seed_rules/)"]
+    subgraph Corpus["1. Normative Knowledge Base (/database/seed_rules/)"]
         M1["01_wcag_2_2_and_3_0.json (WCAG 2.2 AA/AAA + 3.0 Draft)"]
         M2["02_platform_design_systems.json (Apple HIG 26 / Liquid Glass, M3, Carbon)"]
         M3["03_ergonomics_and_laws_of_ux.json (ISO 9241-110:2020 + Laws of UX)"]
@@ -26,22 +26,22 @@ flowchart TD
         M6["06_core_web_vitals_2026.json (LCP, INP, CLS)"]
     end
 
-    subgraph Storage["2. Схема и хранилище (/schema & /database)"]
+    subgraph Storage["2. Unified Schema & Storage (/schema & /database)"]
         TS["/schema/types.ts (Strict TypeScript)"]
         JSON_SCH["/schema/ux_rules_schema.json (JSON Schema 2020-12)"]
         SQLITE["/database/ux_checklist_2026.sqlite (SQLite3 + FTS5 + JSON1)"]
     end
 
-    subgraph Engine["3. Гибридный раннер (/engine/auditor.ts)"]
-        VP["3 вьюпорта: 375x812 (Mobile), 320x568 (Reflow), 1440x900 (Desktop)"]
+    subgraph Engine["3. Hybrid Audit Runner (/engine/auditor.ts)"]
+        VP["3 Viewports: 375x812 (Mobile), 320x568 (Reflow), 1440x900 (Desktop)"]
         DOM["@axe-core/playwright + Tab Focus Obscured (2.4.11) + Hitbox Probes"]
         PERF["PerformanceObserver (LCP <= 2500ms, INP <= 200ms, CLS < 0.1)"]
-        VISION["Gemini Multimodal Vision (Эвристики композиции, контраста и ИИ-паттернов)"]
+        VISION["Gemini Multimodal Vision (Visual Hierarchy, Contrast & AI UX Heuristics)"]
     end
 
-    subgraph Integration["4. Интеграция с IDE и отчеты (/mcp-server & /reports)"]
+    subgraph Integration["4. IDE Integration & Reports (/mcp-server & /reports)"]
         MCP["/mcp-server/index.ts (JSON-RPC 2.0 stdio MCP Server)"]
-        REP["/reports/ (JSON + Русский Markdown-отчет + Скриншоты)"]
+        REP["/reports/ (JSON + Markdown Audit Reports + Viewport Screenshots)"]
     end
 
     M1 & M2 & M3 & M4 & M5 & M6 --> JSON_SCH --> SQLITE
@@ -53,51 +53,51 @@ flowchart TD
 
 ---
 
-## Охват стандартов (6 модулей / 11 семейств / 43 правила)
+## Standards Coverage Matrix (6 Modules / 11 Standard Families / 43 Rules)
 
-| Модуль | Семейства стандартов (`standard_family`) | Ключевые проверяемые требования и пороги (`quantitative_threshold`) |
+| Seed Module | Standard Families (`standard_family`) | Key Audited Requirements & Quantitative Thresholds (`quantitative_threshold`) |
 | :--- | :--- | :--- |
-| **`01_wcag_2_2_and_3_0.json`** | `WCAG_2_2`, `WCAG_3_0_DRAFT` | • **9 новых критериев WCAG 2.2**: `2.4.11` / `2.4.12` Focus Not Obscured (защита от перекрытия фокуса sticky-шапками, `scroll-padding`), `2.4.13` Focus Appearance (толщина $\ge 2\text{px}$, контраст $\ge 3:1$), `2.5.7` Dragging Movements (одиночный клик/тап вместо drag-and-drop), `2.5.8` Target Size Minimum ($24 \times 24\text{ CSS px}$), `3.2.6` Consistent Help, `3.3.7` Redundant Entry, `3.3.8` / `3.3.9` Accessible Authentication (разрешение `paste` в паролях, `autocomplete="current-password webauthn"`, Passkeys, отказ от головоломок CAPTCHA).<br>• **Базовые критерии EAA**: `1.4.10` Reflow на `320px` без горизонтального скролла, `1.4.12` Text Spacing, `1.4.3` Контраст текста $\ge 4.5:1$ и UI $\ge 3.0:1$, уровни `BRONZE` / `SILVER` / `GOLD` WCAG 3.0. |
-| **`02_platform_design_systems.json`** | `APPLE_HIG_26`, `MATERIAL_3`, `IBM_CARBON` | • **Сенсорная эргономика и типографика**: $44 \times 44\text{pt}$ (Apple HIG), $48 \times 48\text{dp}$ с зазором $\ge 8\text{px}$ (Material 3), базовый кегль текста $\ge 17\text{px}$, масштабирование Dynamic Type до `200%` без обрезания.<br>• **iOS 26 Liquid Glass**: сохранение контраста $\ge 4.5:1$ на полупрозрачных размытых (`backdrop-filter: blur`) поверхностях, поддержка `prefers-reduced-transparency` и `prefers-reduced-motion`.<br>• **IBM Carbon**: информативные Empty States с CTA, скелетоны (`loading_skeleton`) вместо блокирующих спиннеров, разграничение `readonly` и `disabled`, адаптивные Overflow-меню. |
-| **`03_ergonomics_and_laws_of_ux.json`** | `LAWS_OF_UX`, `ISO_9241_110` | • **Когнитивные законы UX**: Порог Доэрти ($< 400\text{ мс}$), Закон Постела (либеральный парсинг ввода), Эффект фон Ресторфф ($\le 1$ визуально доминирующий Primary CTA на экран), Законы Гештальта (расстояние от `label` до `input` $< 50\%$ от шага между полями), Закон Миллера ($5\text{–}9$ элементов меню), Чанкинг (группы по 4 цифры), Эффект края, Зейгарник и Градиент цели.<br>• **ISO 9241-110:2020**: привязка каждого правила к 7 принципам диалога. |
-| **`04_baymard_ecommerce_benchmarks.json`** | `BAYMARD_2026` | • **Оплата и чекаут**: автоформатирование номера карты по 4 цифры с пробелами (`BAYMARD-CHK-01`), паттерн «Fake Editing Flow» для редактирования сохраненных карт без предварительного удаления (`BAYMARD-CHK-02`).<br>• **Карточка товара (PDP) и каталог**: отказ от горизонтальных табов в пользу вертикального стека (`BAYMARD-PDP-01`), явная индикация скрытых миниатюр галереи (`+N фото`, `BAYMARD-PDP-02`), панель активных фильтров «Applied Filters» и 8 типов поисковых запросов (`BAYMARD-NAV-01`).<br>• **Личный кабинет**: 7 базовых путей в меню «Мой аккаунт», 6 деталей трекинга заказа прямо на сайте и статус `Cancellation Requested` (`BAYMARD-ACC-01`). |
-| **`05_human_ai_interaction.json`** | `MICROSOFT_HAX`, `GOOGLE_PAIR_V3` | • **Microsoft HAX 18 Guidelines & Google PAIR v3**: прозрачность возможностей и ограничений ИИ на старте (`G1`, `G2`), видимый стриминг рассуждений и обязательное подтверждение человека (`Human-in-the-Loop`) перед необратимыми действиями, кликабельные источники и категориальная уверенность с исключением безопасности `HAX G11`, запрет перетасовки списков под курсором (`HAX G14`), гранулярный фидбэк (`HAX G15`), ветвление промптов и сброс памяти ИИ. |
-| **`06_core_web_vitals_2026.json`** | `CORE_WEB_VITALS` | • **Производительность в реальном времени**: $\text{LCP} \le 2500\text{ мс}$ (`fetchpriority="high"` на герое без `loading="lazy"`), $\text{INP} \le 200\text{ мс}$ и $\text{CLS} < 0.1$ на мобильном и десктопном вьюпортах. |
+| **`01_wcag_2_2_and_3_0.json`** | `WCAG_2_2`, `WCAG_3_0_DRAFT` | • **All 9 New WCAG 2.2 Criteria**: `2.4.11` / `2.4.12` Focus Not Obscured (sticky header/footer bounding-box overlap & `scroll-padding`), `2.4.13` Focus Appearance ($\ge 2\text{px}$ perimeter, contrast change $\ge 3:1$), `2.5.7` Dragging Movements (single-pointer click/tap fallback), `2.5.8` Target Size Minimum ($24 \times 24\text{ CSS px}$ floor), `3.2.6` Consistent Help, `3.3.7` Redundant Entry, `3.3.8` / `3.3.9` Accessible Authentication (clipboard `paste` allowed on passwords, `autocomplete="current-password webauthn"`, Passkey support, zero object-recognition CAPTCHA puzzles).<br>• **Core EAA Criteria**: `1.4.10` Reflow at `320px` without horizontal scroll, `1.4.12` Text Spacing resilience, `1.4.3` Text ($\ge 4.5:1$) & UI ($\ge 3.0:1$) contrast, and WCAG 3.0 `BRONZE` / `SILVER` / `GOLD` scoring tiers. |
+| **`02_platform_design_systems.json`** | `APPLE_HIG_26`, `MATERIAL_3`, `IBM_CARBON` | • **Touch & Typography**: $44 \times 44\text{pt}$ hit targets (Apple HIG), $48 \times 48\text{dp}$ targets with $\ge 8\text{px}$ gap (Material 3), body text legibility floor $\ge 17\text{px}$, Dynamic Type scaling up to `200%` without clipping.<br>• **iOS 26 Liquid Glass**: $\ge 4.5:1$ text contrast over translucent blurred (`backdrop-filter: blur`) surfaces, plus `@media (prefers-reduced-transparency: reduce)` & `@media (prefers-reduced-motion: reduce)` adaptation.<br>• **IBM Carbon Completeness**: actionable Empty States with primary CTA, progressive Skeleton Loading states (`loading_skeleton`) instead of blocking spinners, `readonly` vs `disabled` differentiation, and responsive Overflow Menus. |
+| **`03_ergonomics_and_laws_of_ux.json`** | `LAWS_OF_UX`, `ISO_9241_110` | • **Cognitive & Ergonomic Laws**: Doherty Threshold ($< 400\text{ms}$ visual feedback), Postel's Law (liberal input normalization), Von Restorff Isolation Effect ($\le 1$ visually dominant Primary CTA per viewport), Gestalt Proximity & Common Region (`label`-to-`input` distance $< 50\%$ of inter-field gap), Miller's Law ($5\text{–}9$ top-level nav items), 4-Digit Chunking, Serial Position Effect, and Zeigarnik / Goal-Gradient progress indicators.<br>• **ISO 9241-110:2020**: explicit mapping to all 7 dialogue principles. |
+| **`04_baymard_ecommerce_benchmarks.json`** | `BAYMARD_2026` | • **Checkout & Payments**: Credit Card 4-digit space auto-formatting (`BAYMARD-CHK-01`), Stored Payment "Fake Editing Flow" without forcing prior card deletion (`BAYMARD-CHK-02`).<br>• **Product Page (PDP) & Catalog**: vertically stacked PDP layout instead of horizontal tabs (`BAYMARD-PDP-01`), hidden gallery thumbnail signposting (`+N photos`, `BAYMARD-PDP-02`), Applied Filters overview bar & 8 core search query types (`BAYMARD-NAV-01`).<br>• **Account Self-Service**: 7 core paths in the "My Account" dropdown, 6 on-site order-tracking details without carrier redirect, and explicit `Cancellation Requested` state (`BAYMARD-ACC-01`). |
+| **`05_human_ai_interaction.json`** | `MICROSOFT_HAX`, `GOOGLE_PAIR_V3` | • **Microsoft HAX 18 Guidelines & Google PAIR v3**: upfront capability & limitation disclosure (`G1`, `G2`), live token streaming & multi-step reasoning progress, mandatory human-in-the-loop approval before consequential actions, clickable source citations & categorical confidence cues with the `HAX G11` anti-fraud/security non-disclosure exception, cautious adaptation forbidding live list reshuffling (`HAX G14`), granular feedback (`HAX G15`), non-destructive prompt branching, and explicit memory/context reset. |
+| **`06_core_web_vitals_2026.json`** | `CORE_WEB_VITALS` | • **Runtime Telemetry**: $\text{LCP} \le 2500\text{ms}$ (`fetchpriority="high"` on above-the-fold hero without `loading="lazy"`), $\text{INP} \le 200\text{ms}$, and $\text{CLS} < 0.1$ across mobile and desktop viewports. |
 
 ---
 
-## Быстрый старт
+## Quick Start
 
-### Требования
-- **Node.js >= 22.5.0** (используется встроенный нативный модуль `node:sqlite` и нативная поддержка TypeScript `--experimental-strip-types` без необходимости компиляции C++ аддонов).
-- Опционально: **Playwright Chromium** (`npx playwright install chromium`) для запуска реального безголового браузера и **API-ключ Gemini** (`GEMINI_API_KEY`) для мультимодальной визуальной оценки скриншотов.
+### Prerequisites
+- **Node.js >= 22.5.0** (leverages built-in `node:sqlite` and native TypeScript execution `--experimental-strip-types` with zero native C++ compilation overhead).
+- Optional: **Playwright Chromium** (`npx playwright install chromium`) for live headless browser rendering, and a **Google Gemini API Key** (`GEMINI_API_KEY`) for Multimodal Vision screenshot evaluation.
 
-### Установка и команды
+### Installation & CLI Usage
 
 ```bash
-# 1. Установка зависимостей (опционально для полного браузерного прогона с Playwright и Axe)
+# 1. Install dependencies (optional for full headless Playwright + Axe browser execution)
 npm install
 npx playwright install chromium
 
-# 2. Строгая валидация всех 6 JSON-модулей по JSON Schema (Draft 2020-12)
+# 2. Validate all 6 JSON seed modules against JSON Schema (Draft 2020-12)
 npm run validate:schema
 
-# 3. Компиляция и заполнение SQLite-базы (/database/ux_checklist_2026.sqlite)
+# 3. Compile and seed the SQLite3 FTS5 database (/database/ux_checklist_2026.sqlite)
 npm run seed:db
 
-# 4. Самодиагностика инструментов MCP-сервера
+# 4. Run MCP Server tool self-tests
 npm run mcp:test
 
-# 5. Запуск гибридного UX/UI аудита (встроенный проверочный стенд или внешний URL)
+# 5. Run the Hybrid UX/UI Audit Runner (built-in benchmark fixture or any target URL)
 npm run audit -- --self-test
 npm run audit -- --url https://example.com
 ```
 
 ---
 
-## Подключение MCP-сервера в Antigravity IDE / Cursor / Claude Desktop
+## Connecting the MCP Server in Antigravity IDE / Cursor / Claude Desktop
 
-Добавьте конфигурацию сервера в ваш файл настроек MCP (`mcp_config.json`):
+Add the server to your MCP configuration (`mcp_config.json`):
 
 ```json
 {
@@ -106,7 +106,7 @@ npm run audit -- --url https://example.com
       "command": "node",
       "args": [
         "--experimental-strip-types",
-        "d:/Projects/Google/Ux_Ui_Checklist/mcp-server/index.ts"
+        "/absolute/path/to/Ux-UI-local-base/mcp-server/index.ts"
       ],
       "env": {
         "GEMINI_API_KEY": "YOUR_GEMINI_API_KEY_HERE",
@@ -117,40 +117,40 @@ npm run audit -- --url https://example.com
 }
 ```
 
-### Доступные MCP-инструменты (Tools)
+### Exposed MCP Tools
 
-1. **`query_ux_rules`** — фильтрация и полнотекстовый поиск правил по `standard_family`, `category`, `legal_or_business_risk`, `target_state` или поисковому запросу на русском/английском языке.
-2. **`get_rule_by_id`** — получение полной спецификации правила по ID (например, `WCAG-2.4.11`, `BAYMARD-CHK-01`, `HIG-TOUCH-01`, `HAX-G14`), включая `quantitative_threshold`, `playwright_check_snippet`, `vision_prompt_heuristic` и `remediation_guide_ru`.
-3. **`generate_component_checklist`** — генерация готового чек-листа приемки для конкретного типа UI-компонента (`checkout_form`, `ai_chat`, `product_page`, `navigation_header`, `auth_login`, `data_table`).
-4. **`run_hybrid_ux_audit`** — запуск гибридного аудита страницы по `url` на трех вьюпортах (`375x812`, `320x568`, `1440x900`) с сохранением JSON и Markdown-отчетов в `/reports/`.
+1. **`query_ux_rules`** — Filter and full-text search rules by `standard_family`, `category`, `legal_or_business_risk`, `target_state`, or free-text keyword.
+2. **`get_rule_by_id`** — Retrieve the complete normative specification for a specific rule ID (e.g., `WCAG-2.4.11`, `BAYMARD-CHK-01`, `HIG-TOUCH-01`, `HAX-G14`), including `quantitative_threshold`, `playwright_check_snippet`, `vision_prompt_heuristic`, and `remediation_guide`.
+3. **`generate_component_checklist`** — Generate a curated pre-flight UX/UI checklist and acceptance criteria for a specific component type (`checkout_form`, `ai_chat`, `product_page`, `navigation_header`, `auth_login`, `data_table`).
+4. **`run_hybrid_ux_audit`** — Launch a multi-viewport audit (`375x812`, `320x568`, `1440x900`) against any live URL or local dev server and output structured JSON and Markdown reports to `/reports/`.
 
 ---
 
-## Структура репозитория
+## Repository Structure
 
 ```text
-├── .github/workflows/ci.yml            # GitHub Actions CI: валидация схемы, сборка SQLite и тесты MCP/Auditor
+├── .github/workflows/ci.yml            # GitHub Actions CI: schema validation, SQLite build & MCP/Auditor tests
 ├── schema/
-│   ├── types.ts                        # Строгие TypeScript-типы и перечисления (UxAuditRule, AuditReport)
-│   ├── ux_rules_schema.json            # JSON Schema (Draft 2020-12)
-│   └── validate_seeds.ts               # Валидатор модулей базы знаний
+│   ├── types.ts                        # Strict TypeScript interfaces & enums (UxAuditRule, AuditReport)
+│   ├── ux_rules_schema.json            # JSON Schema (Draft 2020-12) specification
+│   └── validate_seeds.ts               # Automated seed validator
 ├── database/
-│   ├── schema.sql                      # DDL-схема SQLite3 + FTS5 + триггеры синхронизации
-│   ├── init_db.ts                      # Компилятор JSON -> SQLite3 и слой запросов
-│   ├── ux_checklist_2026.sqlite        # Скомпилированная база знаний SQLite3
-│   └── seed_rules/                     # 6 модульных JSON-файлов (43 правила на русском языке)
+│   ├── schema.sql                      # SQLite3 + FTS5 relational DDL & sync triggers
+│   ├── init_db.ts                      # JSON -> SQLite3 compiler & query layer
+│   ├── ux_checklist_2026.sqlite        # Compiled production SQLite3 database
+│   └── seed_rules/                     # 6 modular JSON seed files (43 normative rules)
 ├── engine/
-│   └── auditor.ts                      # Гибридный раннер (Playwright + Axe + Web Vitals + Gemini Vision)
+│   └── auditor.ts                      # Hybrid Runner (Playwright + Axe + Web Vitals + Gemini Vision)
 ├── mcp-server/
-│   └── index.ts                        # Нативный MCP-сервер (JSON-RPC 2.0 over stdio)
-├── reports/                            # Генерируемые JSON/Markdown отчеты и скриншоты вьюпортов
-├── .env.example                        # Шаблон переменных окружения
-├── CONTRIBUTING.md                     # Руководство по добавлению новых правил UX/UI
-└── LICENSE                             # Лицензия MIT
+│   └── index.ts                        # Native MCP Server (JSON-RPC 2.0 over stdio)
+├── reports/                            # Generated JSON/Markdown audit reports & viewport screenshots
+├── .env.example                        # Environment variable template
+├── CONTRIBUTING.md                     # Guide for authoring and validating new UX/UI rules
+└── LICENSE                             # MIT License
 ```
 
 ---
 
-## Лицензия
+## License
 
-Проект распространяется под лицензией [MIT](./LICENSE).
+Released under the [MIT License](./LICENSE).

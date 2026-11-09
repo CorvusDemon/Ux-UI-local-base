@@ -135,10 +135,10 @@ export interface UxAuditRule {
   standard_family: StandardFamily;
   /** Functional UX/UI audit domain */
   category: RuleCategory;
-  /** Concise rule name in Russian */
-  title_ru: string;
-  /** Detailed normative requirement and ergonomic/business rationale in Russian */
-  description_ru: string;
+  /** Concise normative rule title */
+  title: string;
+  /** Detailed normative requirement and ergonomic/business rationale */
+  description: string;
   /** Legal compliance or conversion severity level */
   legal_or_business_risk: LegalOrBusinessRisk;
   /** Component and viewport states in which this rule must be verified (IBM Carbon matrix) */
@@ -155,8 +155,8 @@ export interface UxAuditRule {
   playwright_check_snippet: string;
   /** Structured heuristic instruction for Gemini Multimodal Vision evaluation on screenshots */
   vision_prompt_heuristic: string;
-  /** Actionable code and UI design remediation guide in Russian */
-  remediation_guide_ru: string;
+  /** Actionable code and UI design remediation guide */
+  remediation_guide: string;
   /** Optional WCAG 3.0 Draft outcome scoring tier (Bronze / Silver / Gold) */
   wcag_3_0_tier?: Wcag3ScoringTier;
   /** Optional ISO 9241-110:2020 dialogue principle mapping */
@@ -178,7 +178,7 @@ export interface RuleEvaluationResult {
   rule_id: string;
   standard_family: StandardFamily;
   category: RuleCategory;
-  title_ru: string;
+  title: string;
   legal_or_business_risk: LegalOrBusinessRisk;
   verification_modality: VerificationModality;
   outcome: EvaluationOutcome;
@@ -186,9 +186,9 @@ export interface RuleEvaluationResult {
   measured_value?: Record<string, number | string | boolean>;
   affected_selectors?: string[];
   vision_confidence?: number;
-  vision_reasoning_ru?: string;
+  vision_reasoning?: string;
   screenshot_path?: string;
-  remediation_guide_ru: string;
+  remediation_guide: string;
 }
 
 export interface RuntimeWebVitalsMetrics {

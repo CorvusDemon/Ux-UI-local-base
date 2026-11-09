@@ -1,7 +1,7 @@
 {
   "report_id": "sample_audit_2026",
   "target_url": "file:///D:/Projects/Google/Ux_Ui_Checklist/reports/self_test_fixture.html",
-  "timestamp_iso": "2026-11-09T14:36:10.566Z",
+  "timestamp_iso": "2026-11-09T14:59:29.087Z",
   "viewports_tested": [
     {
       "name": "mobile_375",
@@ -62,7 +62,7 @@
       "rule_id": "BAYMARD-ACC-01",
       "standard_family": "BAYMARD_2026",
       "category": "Account_SelfService",
-      "title_ru": "Выпадающее меню «Мой аккаунт» (7 ключевых путей с иерархией) и встроенный трекинг заказа (6 деталей + статус Cancellation Requested)",
+      "title": "My Account Dropdown (7 Core Paths With Hierarchy) & On-Site Order Tracking (6 Details + Cancellation Requested State)",
       "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
       "verification_modality": "AI_MULTIMODAL_VISION",
       "outcome": "APPLIED_PASS",
@@ -74,15 +74,15 @@
         "tab_stops_verified": 9
       },
       "vision_confidence": 0.88,
-      "vision_reasoning_ru": "Эвристическая проверка DOM и геометрии подтвердила соответствие правилу.",
+      "vision_reasoning": "Hybrid DOM & geometry heuristic probe verified full compliance.",
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Включите в меню профиля все 7 базовых разделов (выделив «Мои заказы» и «Возвраты» в верхнюю приоритетную группу), интегрируйте вебхуки курьерских служб для отображения 6 параметров трекинга внутри личного кабинета и добавьте статус `CANCELLATION_REQUESTED` в конечный автомат заказа."
+      "remediation_guide": "Structure the Account dropdown with all 7 core self-service paths (highlighting 'Orders' and 'Returns' at the top), ingest carrier webhooks to render all 6 tracking details natively on-site, and add `CANCELLATION_REQUESTED` to your order state machine."
     },
     {
       "rule_id": "BAYMARD-CHK-01",
       "standard_family": "BAYMARD_2026",
       "category": "Forms_Checkout",
-      "title_ru": "Автоформатирование номера банковской карты группами по 4 цифры с пробелами (Baymard Checkout)",
+      "title": "Credit Card Input Auto-Formatting in 4-Digit Space-Separated Chunks (Baymard Checkout)",
       "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
       "verification_modality": "AUTOMATED_DOM",
       "outcome": "APPLIED_PASS",
@@ -94,13 +94,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Используйте `<input type=\"text\" inputmode=\"numeric\" autocomplete=\"cc-number\" maxlength=\"23\" placeholder=\"0000 0000 0000 0000\" />` (никогда не используйте `type=\"number\"`) и функцию автоформатирования: `val.replace(/\\D/g, '').replace(/(\\d{4})(?=\\d)/g, '$1 ')`."
+      "remediation_guide": "Use `<input type=\"text\" inputmode=\"numeric\" autocomplete=\"cc-number\" maxlength=\"23\" placeholder=\"0000 0000 0000 0000\" />` (never `type=\"number\"`) and format live input with `val.replace(/\\D/g, '').replace(/(\\d{4})(?=\\d)/g, '$1 ')`."
     },
     {
       "rule_id": "BAYMARD-CHK-02",
       "standard_family": "BAYMARD_2026",
       "category": "Forms_Checkout",
-      "title_ru": "Паттерн «Fake Editing Flow» для обновления сохраненных карт (без принудительного удаления)",
+      "title": "Stored Payment 'Fake Editing Flow' Without Forcing Card Deletion First",
       "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
       "verification_modality": "AI_MULTIMODAL_VISION",
       "outcome": "DOES_NOT_APPLY",
@@ -112,15 +112,15 @@
         "tab_stops_verified": 9
       },
       "vision_confidence": 0.88,
-      "vision_reasoning_ru": "Паттерн не обнаружен в DOM-дереве страницы (3-state HAX logic: DOES_NOT_APPLY).",
+      "vision_reasoning": "UI pattern not present in page DOM (3-state HAX logic: DOES_NOT_APPLY).",
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Добавьте кнопку `«Изменить»` к каждой сохраненной карте. При сохранении изменений отправляйте запрос на выпуск нового платежного токена и после успешного ответа вызывайте удаление прежнего токена (`DELETE /payment-methods/:oldId`)."
+      "remediation_guide": "Render an `'Edit'` button on every saved payment card. When the user submits updated details, create a new payment token via your gateway and subsequently call `DELETE /payment-methods/:oldTokenId`."
     },
     {
       "rule_id": "BAYMARD-NAV-01",
       "standard_family": "BAYMARD_2026",
       "category": "Navigation_Search",
-      "title_ru": "Панель активных фильтров («Applied Filters» Overview Bar) и поддержка 8 типов поисковых запросов",
+      "title": "Applied Filters Overview Bar & Support for 8 Core Search Query Types",
       "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
       "verification_modality": "AI_MULTIMODAL_VISION",
       "outcome": "APPLIED_PASS",
@@ -132,15 +132,15 @@
         "tab_stops_verified": 9
       },
       "vision_confidence": 0.88,
-      "vision_reasoning_ru": "Эвристическая проверка DOM и геометрии подтвердила соответствие правилу.",
+      "vision_reasoning": "Hybrid DOM & geometry heuristic probe verified full compliance.",
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_wcag_reflow_320_full.svg",
-      "remediation_guide_ru": "Выведите над сеткой результатов блок `<AppliedFiltersBar filters={activeFilters} onRemove={...} onClearAll={...} />` и настройте поисковый индекс (Typesense / Elasticsearch / Векторный гибридный поиск) на разбор атрибутов, синонимов, ценовых модификаторов («до 5000 руб») и симптоматических запросов."
+      "remediation_guide": "Render `<AppliedFiltersBar filters={activeFilters} onRemove={...} onClearAll={...} />` above the results grid, and configure hybrid search indexing to parse attributes, compatibility models, price modifiers, and typo-tolerant synonyms."
     },
     {
       "rule_id": "BAYMARD-PDP-01",
       "standard_family": "BAYMARD_2026",
       "category": "Visual_Hierarchy",
-      "title_ru": "Отказ от горизонтальных вкладок (Horizontal Tabs) для основных секций карточки товара (PDP)",
+      "title": "Avoid Horizontal Tabs for Core Product Page (PDP) Content Sections",
       "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
       "verification_modality": "AI_MULTIMODAL_VISION",
       "outcome": "DOES_NOT_APPLY",
@@ -152,15 +152,15 @@
         "tab_stops_verified": 9
       },
       "vision_confidence": 0.88,
-      "vision_reasoning_ru": "Паттерн не обнаружен в DOM-дереве страницы (3-state HAX logic: DOES_NOT_APPLY).",
+      "vision_reasoning": "UI pattern not present in page DOM (3-state HAX logic: DOES_NOT_APPLY).",
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_wcag_reflow_320_full.svg",
-      "remediation_guide_ru": "Замените `<Tabs>` на странице товара на вертикально расположенные секции `<section id='specs'>`, `<section id='reviews'>` с плавающей панелью быстрых якорей (`position: sticky; top: 64px;`) для мгновенного скролла к нужному разделу."
+      "remediation_guide": "Replace horizontal `<Tabs>` on Product Detail Pages with vertically stacked `<section id='specs'>` and `<section id='reviews'>` blocks paired with a sticky anchor jump-bar (`position: sticky; top: 64px;`)."
     },
     {
       "rule_id": "BAYMARD-PDP-02",
       "standard_family": "BAYMARD_2026",
       "category": "Visual_Hierarchy",
-      "title_ru": "Явная индикация скрытых миниатюр в галерее изображений товара (Signposting Hidden Thumbnails)",
+      "title": "Always Signpost Hidden Thumbnails in Product Image Galleries",
       "legal_or_business_risk": "MEDIUM_UX_FRICTION",
       "verification_modality": "AI_MULTIMODAL_VISION",
       "outcome": "DOES_NOT_APPLY",
@@ -172,15 +172,15 @@
         "tab_stops_verified": 9
       },
       "vision_confidence": 0.88,
-      "vision_reasoning_ru": "Паттерн не обнаружен в DOM-дереве страницы (3-state HAX logic: DOES_NOT_APPLY).",
+      "vision_reasoning": "UI pattern not present in page DOM (3-state HAX logic: DOES_NOT_APPLY).",
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_wcag_reflow_320_full.svg",
-      "remediation_guide_ru": "Ограничьте видимый ряд миниатюр с наложением бейджа `+4 еще` на последнюю миниатюру, либо на мобильных устройствах задайте `grid-auto-columns: 82%` для главного слайда, чтобы край следующего изображения всегда выглядывал на экран."
+      "remediation_guide": "Overlay a `+4 more` badge on the final visible thumbnail in desktop strips, or set `grid-auto-columns: 82%` on mobile carousels so the leading edge of the next image peeks into view."
     },
     {
       "rule_id": "CARBON-STATE-01",
       "standard_family": "IBM_CARBON",
       "category": "Visual_Hierarchy",
-      "title_ru": "Полнота пустых состояний (Empty States с объяснением и целевым действием CTA)",
+      "title": "Actionable Empty States With Clear Explanation & Primary CTA (IBM Carbon)",
       "legal_or_business_risk": "MEDIUM_UX_FRICTION",
       "verification_modality": "AI_MULTIMODAL_VISION",
       "outcome": "DOES_NOT_APPLY",
@@ -192,15 +192,15 @@
         "tab_stops_verified": 9
       },
       "vision_confidence": 0.88,
-      "vision_reasoning_ru": "Паттерн не обнаружен в DOM-дереве страницы (3-state HAX logic: DOES_NOT_APPLY).",
+      "vision_reasoning": "UI pattern not present in page DOM (3-state HAX logic: DOES_NOT_APPLY).",
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Спроектируйте компонент `<EmptyState title='Ничего не найдено' description='Попробуйте изменить параметры фильтрации' action={<Button>Сбросить фильтры</Button>} />` для всех списков, таблиц и виджетов."
+      "remediation_guide": "Implement a structured `<EmptyState title='No matching items found' description='Try adjusting or clearing your active filters' action={<Button>Reset Filters</Button>} />` for all lists, tables, and dashboard widgets."
     },
     {
       "rule_id": "CARBON-STATE-02",
       "standard_family": "IBM_CARBON",
       "category": "Runtime_Performance",
-      "title_ru": "Скелетонная загрузка вместо блокирующих спиннеров (Skeleton Loading States)",
+      "title": "Progressive Skeleton Loading States Instead of Blocking Spinners (IBM Carbon)",
       "legal_or_business_risk": "MEDIUM_UX_FRICTION",
       "verification_modality": "AI_MULTIMODAL_VISION",
       "outcome": "APPLIED_PASS",
@@ -212,15 +212,15 @@
         "tab_stops_verified": 9
       },
       "vision_confidence": 0.88,
-      "vision_reasoning_ru": "Эвристическая проверка DOM и геометрии подтвердила соответствие правилу.",
+      "vision_reasoning": "Hybrid DOM & geometry heuristic probe verified full compliance.",
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Замените абстрактные крутящиеся индикаторы на структурные `<SkeletonPlaceholder />` тех же размеров (`width`/`height`), что и целевой компонент, добавив `aria-busy=\"true\"` на родительский контейнер."
+      "remediation_guide": "Replace generic spinning loaders with structural `<SkeletonPlaceholder />` components matching the exact dimensions (`width`/`height`) of the target content, and set `aria-busy=\"true\"` on the loading region."
     },
     {
       "rule_id": "CARBON-STATE-03",
       "standard_family": "IBM_CARBON",
       "category": "Forms_Checkout",
-      "title_ru": "Разграничение состояний Read-Only и Disabled + корректные Overflow-меню (IBM Carbon)",
+      "title": "Read-Only vs Disabled State Differentiation & Responsive Overflow Menus (IBM Carbon)",
       "legal_or_business_risk": "MEDIUM_UX_FRICTION",
       "verification_modality": "AUTOMATED_DOM",
       "outcome": "APPLIED_PASS",
@@ -232,13 +232,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_wcag_reflow_320_full.svg",
-      "remediation_guide_ru": "Для нередактируемых данных, которые нужны пользователю для чтения или копирования (например, ID заказа, токен, email), используйте `readonly` вместо `disabled` с иконкой замка и контрастом текста >= 4.5:1. Для вторичных действий карточек и таблиц применяйте `<OverflowMenu aria-label='Дополнительные действия'>`."
+      "remediation_guide": "Use `readonly` instead of `disabled` for non-editable reference values that users need to read or copy (such as Order IDs, API tokens, or emails) with >= 4.5:1 contrast. Collapse secondary toolbar actions into `<OverflowMenu aria-label='More actions'>`."
     },
     {
       "rule_id": "CWV-CLS-01",
       "standard_family": "CORE_WEB_VITALS",
       "category": "Runtime_Performance",
-      "title_ru": "Cumulative Layout Shift (CLS < 0.1) — Визуальная стабильность верстки без прыжков контента",
+      "title": "Cumulative Layout Shift (CLS < 0.1) — Visual Layout Stability",
       "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
       "verification_modality": "AUTOMATED_RUNTIME_PERF",
       "outcome": "APPLIED_PASS",
@@ -250,13 +250,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_wcag_reflow_320_full.svg",
-      "remediation_guide_ru": "Проставьте явные `width` и `height` (или `aspect-ratio: 16 / 9`) всем тегам `<img>` и `<video>`, зарезервируйте `min-height` для динамических баннеров и скелетонов и используйте `size-adjust` для фоллбэк-шрифтов."
+      "remediation_guide": "Declare explicit `width` and `height` attributes (or `aspect-ratio: 16 / 9`) on all `<img>` and `<video>` elements, reserve `min-height` on dynamic banners/skeletons, and apply `size-adjust` metric overrides to fallback web fonts."
     },
     {
       "rule_id": "CWV-INP-01",
       "standard_family": "CORE_WEB_VITALS",
       "category": "Runtime_Performance",
-      "title_ru": "Interaction to Next Paint (INP <= 200 мс) — Отзывчивость интерфейса на действия пользователя",
+      "title": "Interaction to Next Paint (INP <= 200ms) — Main-Thread Responsiveness",
       "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
       "verification_modality": "AUTOMATED_RUNTIME_PERF",
       "outcome": "APPLIED_PASS",
@@ -268,13 +268,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Разбивайте тяжелые обработчики событий с помощью `scheduler.yield()` или `setTimeout(..., 0)`, используйте `startTransition` в React для некритичных обновлений UI и минимизируйте размер DOM-дерева (`< 1500` узлов)."
+      "remediation_guide": "Yield long event handlers using `scheduler.yield()` or `setTimeout(..., 0)`, wrap non-urgent UI updates in React `startTransition`, and keep total DOM size below `1500` nodes."
     },
     {
       "rule_id": "CWV-LCP-01",
       "standard_family": "CORE_WEB_VITALS",
       "category": "Runtime_Performance",
-      "title_ru": "Largest Contentful Paint (LCP <= 2500 мс) — Скорость отрисовки главного контентного блока",
+      "title": "Largest Contentful Paint (LCP <= 2500ms) Across Mobile & Desktop",
       "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
       "verification_modality": "AUTOMATED_RUNTIME_PERF",
       "outcome": "APPLIED_PASS",
@@ -286,13 +286,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_wcag_reflow_320_full.svg",
-      "remediation_guide_ru": "Добавьте `fetchpriority=\"high\"` и уберите `loading=\"lazy\"` у главного LCP-изображения первого экрана, конвертируйте графику в AVIF/WebP, настройте `<link rel=\"preload\" as=\"image\">` и сократите TTFB до `< 600 мс`."
+      "remediation_guide": "Add `fetchpriority=\"high\"` and remove `loading=\"lazy\"` on the primary above-the-fold LCP image, serve AVIF/WebP formats, preload critical hero assets via `<link rel=\"preload\" as=\"image\">`, and keep server TTFB `< 600ms`."
     },
     {
       "rule_id": "GENAI-STREAM-APPROVAL-01",
       "standard_family": "GOOGLE_PAIR_V3",
       "category": "Human_AI_Interaction",
-      "title_ru": "Видимый стриминг многошагового рассуждения и обязательное подтверждение человека (Human-in-the-Loop)",
+      "title": "Visible Streaming Progress & Mandatory Human-in-the-Loop Approval for Consequential Actions",
       "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
       "verification_modality": "AI_MULTIMODAL_VISION",
       "outcome": "DOES_NOT_APPLY",
@@ -304,15 +304,15 @@
         "tab_stops_verified": 9
       },
       "vision_confidence": 0.88,
-      "vision_reasoning_ru": "Паттерн не обнаружен в DOM-дереве страницы (3-state HAX logic: DOES_NOT_APPLY).",
+      "vision_reasoning": "UI pattern not present in page DOM (3-state HAX logic: DOES_NOT_APPLY).",
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Реализуйте SSE/WebSocket стриминг с компонентом `<ReasoningSteps steps={...} />` (`aria-live='polite'`) и блокирующий диалог подтверждения `<ActionApprovalCard diff={proposedChanges} onConfirm={...} onCancel={...} />` для всех tool-calls с побочными эффектами."
+      "remediation_guide": "Stream tokens via SSE/WebSockets with `<ReasoningSteps steps={...} />` (`aria-live='polite'`) and gate all side-effecting tool calls behind an explicit `<ActionApprovalCard diff={proposedChanges} onConfirm={...} onCancel={...} />` dialog."
     },
     {
       "rule_id": "HAX-G01-G02",
       "standard_family": "MICROSOFT_HAX",
       "category": "Human_AI_Interaction",
-      "title_ru": "Прозрачность возможностей и ограничений ИИ на старте (Microsoft HAX G1 & G2)",
+      "title": "Upfront AI Capability & Precision Disclosure (Microsoft HAX G1 & G2)",
       "legal_or_business_risk": "MEDIUM_UX_FRICTION",
       "verification_modality": "AI_MULTIMODAL_VISION",
       "outcome": "DOES_NOT_APPLY",
@@ -324,15 +324,15 @@
         "tab_stops_verified": 9
       },
       "vision_confidence": 0.88,
-      "vision_reasoning_ru": "Паттерн не обнаружен в DOM-дереве страницы (3-state HAX logic: DOES_NOT_APPLY).",
+      "vision_reasoning": "UI pattern not present in page DOM (3-state HAX logic: DOES_NOT_APPLY).",
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Добавьте над полем ввода ИИ блок из 3–4 интерактивных чипсов с примерами запросов (`«Сравни тарифы»`, `«Суммаризируй отчет»`) и подпись под полем ввода: `«ИИ-ассистент может допускать неточности. Проверяйте важные финансовые и юридические данные»`."
+      "remediation_guide": "Render 3–4 clickable starter prompt chips above the AI input ('Compare pricing tiers', 'Summarize report') and a persistent disclaimer below the composer: `'AI responses may contain inaccuracies. Please verify critical financial or legal facts.'`"
     },
     {
       "rule_id": "HAX-G14",
       "standard_family": "MICROSOFT_HAX",
       "category": "Human_AI_Interaction",
-      "title_ru": "Осторожная адаптация — Запрет перетасовки списков и меню во время чтения (Microsoft HAX G14)",
+      "title": "Cautious Adaptation — Forbid Live List & Menu Reshuffling While Reading (Microsoft HAX G14)",
       "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
       "verification_modality": "AUTOMATED_RUNTIME_PERF",
       "outcome": "APPLIED_PASS",
@@ -344,13 +344,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Буферизуйте асинхронные обновления персонализированных списков в фоновом стейте и отображайте ненавязчивую плашку `<Button>Показать новые рекомендации (3)</Button>` вместо принудительной пересортировки DOM на лету."
+      "remediation_guide": "Buffer asynchronous ranking updates in background state and display a non-intrusive `<Button>Show 3 new recommendations</Button>` pill banner instead of mutating live DOM order under the user's cursor."
     },
     {
       "rule_id": "HAX-G15-RECOVERY",
       "standard_family": "MICROSOFT_HAX",
       "category": "Human_AI_Interaction",
-      "title_ru": "Гранулярная обратная связь (HAX G15), итеративное уточнение без потери контекста и сброс памяти ИИ",
+      "title": "Granular Feedback (HAX G15), Non-Destructive Refinement & Explicit Context/Memory Reset",
       "legal_or_business_risk": "MEDIUM_UX_FRICTION",
       "verification_modality": "AI_MULTIMODAL_VISION",
       "outcome": "DOES_NOT_APPLY",
@@ -362,15 +362,15 @@
         "tab_stops_verified": 9
       },
       "vision_confidence": 0.88,
-      "vision_reasoning_ru": "Паттерн не обнаружен в DOM-дереве страницы (3-state HAX logic: DOES_NOT_APPLY).",
+      "vision_reasoning": "UI pattern not present in page DOM (3-state HAX logic: DOES_NOT_APPLY).",
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Добавьте под каждым сообщением ИИ панель `<AiActionToolbar onRate={...} onRegenerate={...} onEditBranch={...} />`, а в шапке ассистента — кнопку `«Очистить контекст / Новая тема»` с индикацией объема используемой памяти."
+      "remediation_guide": "Attach `<AiActionToolbar onRate={...} onRegenerate={...} onEditBranch={...} />` below every AI response and provide a `'Reset Context / New Session'` control in the assistant header."
     },
     {
       "rule_id": "HIG-GLASS-01",
       "standard_family": "APPLE_HIG_26",
       "category": "Visual_Hierarchy",
-      "title_ru": "Безопасность контраста на полупрозрачных поверхностях Liquid Glass / Acrylic (>= 4.5:1)",
+      "title": "Liquid Glass & Translucent Surface Contrast Safety (>= 4.5:1)",
       "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
       "verification_modality": "AI_MULTIMODAL_VISION",
       "outcome": "APPLIED_PASS",
@@ -382,15 +382,15 @@
         "tab_stops_verified": 9
       },
       "vision_confidence": 0.88,
-      "vision_reasoning_ru": "Эвристическая проверка DOM и геометрии подтвердила соответствие правилу.",
+      "vision_reasoning": "Hybrid DOM & geometry heuristic probe verified full compliance.",
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Всегда комбинируйте `backdrop-filter: blur(20px) saturate(180%)` с защитным полупрозрачным фоновым тоном (`background-color: rgba(255, 255, 255, 0.78)` в светлой теме и `rgba(24, 24, 28, 0.82)` в темной теме) и тонкой контурной рамкой `1px solid rgba(255,255,255,0.2)`."
+      "remediation_guide": "Always pair `backdrop-filter: blur(20px) saturate(180%)` with a protective semi-opaque surface tint (`background-color: rgba(255, 255, 255, 0.78)` in light mode and `rgba(24, 24, 28, 0.82)` in dark mode) plus a subtle `1px solid rgba(255, 255, 255, 0.2)` border."
     },
     {
       "rule_id": "HIG-GLASS-02",
       "standard_family": "APPLE_HIG_26",
       "category": "Accessibility",
-      "title_ru": "Адаптация Liquid Glass и анимаций к prefers-reduced-transparency и prefers-reduced-motion",
+      "title": "Liquid Glass & Motion Adaptation for prefers-reduced-transparency & prefers-reduced-motion",
       "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
       "verification_modality": "AUTOMATED_DOM",
       "outcome": "APPLIED_PASS",
@@ -402,13 +402,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Добавьте в глобальный CSS: `@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }` и `@media (prefers-reduced-transparency: reduce) { .glass-surface { backdrop-filter: none !important; background-color: var(--surface-solid) !important; } }`."
+      "remediation_guide": "Add global CSS media queries: `@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; } }` and `@media (prefers-reduced-transparency: reduce) { .glass-surface { backdrop-filter: none !important; background-color: var(--surface-solid) !important; } }`."
     },
     {
       "rule_id": "HIG-TOUCH-01",
       "standard_family": "APPLE_HIG_26",
       "category": "Touch_Ergonomics",
-      "title_ru": "Минимальная сенсорная область нажатия 44x44pt (Apple HIG Ergonomic Floor)",
+      "title": "Minimum Touch Target Size of 44x44pt (Apple HIG Ergonomic Floor)",
       "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
       "verification_modality": "AUTOMATED_DOM",
       "outcome": "APPLIED_PASS",
@@ -420,13 +420,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_wcag_reflow_320_full.svg",
-      "remediation_guide_ru": "Установите `min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center;` для всех кнопок, иконок тулбара и пунктов мобильной навигации."
+      "remediation_guide": "Set `min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center;` on all buttons, toolbar icons, and mobile navigation items."
     },
     {
       "rule_id": "HIG-TYPE-01",
       "standard_family": "APPLE_HIG_26",
       "category": "Visual_Hierarchy",
-      "title_ru": "Минимальный порог читаемости основного текста >= 17pt/px (Typography Legibility Floor)",
+      "title": "Body Typography Legibility Floor >= 17pt/px (Apple HIG)",
       "legal_or_business_risk": "MEDIUM_UX_FRICTION",
       "verification_modality": "AUTOMATED_DOM",
       "outcome": "APPLIED_PASS",
@@ -438,13 +438,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_wcag_reflow_320_full.svg",
-      "remediation_guide_ru": "Задайте базовый размер шрифта для основного контента `font-size: 1.0625rem` (`17px`) с `line-height: 1.5`, а для всех элементов `<input>`, `<select>` и `<textarea>` — не менее `16px` (`1rem`), чтобы предотвратить нежелательный авто-зум экрана в iOS."
+      "remediation_guide": "Set primary body copy to `font-size: 1.0625rem` (`17px`) with `line-height: 1.5`, and ensure all `<input>`, `<select>`, and `<textarea>` elements use at least `16px` (`1rem`) to prevent unintended iOS auto-zoom."
     },
     {
       "rule_id": "HIG-TYPE-02",
       "standard_family": "APPLE_HIG_26",
       "category": "Accessibility",
-      "title_ru": "Масштабирование Dynamic Type до 200% без обрезания текста (No Text Clipping)",
+      "title": "Dynamic Type Scaling Up to 200% Without Text Clipping",
       "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
       "verification_modality": "AUTOMATED_DOM",
       "outcome": "APPLIED_PASS",
@@ -456,13 +456,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_wcag_reflow_320_full.svg",
-      "remediation_guide_ru": "Определяйте все типографические размеры и отступы в `rem`, избегайте `white-space: nowrap` на кнопках и заголовках карточек и используйте CSS-медиазапросы или `flex-wrap: wrap` для перехода от горизонтальной раскладки к вертикальной при крупном шрифте."
+      "remediation_guide": "Define all typographic scales and spacing tokens in `rem`, avoid `white-space: nowrap` on buttons and card titles, and use `flex-wrap: wrap` so horizontal layouts stack vertically at large text sizes."
     },
     {
       "rule_id": "ISO-9241-DIALOGUE-01",
       "standard_family": "ISO_9241_110",
       "category": "Cognitive_Load",
-      "title_ru": "Принципы диалога ISO 9241-110:2020 — Пригодность для задачи, Управляемость и Защита от ошибок",
+      "title": "ISO 9241-110:2020 Dialogue Principles — Task Suitability, Controllability & Error Robustness",
       "legal_or_business_risk": "MEDIUM_UX_FRICTION",
       "verification_modality": "AI_MULTIMODAL_VISION",
       "outcome": "APPLIED_PASS",
@@ -474,15 +474,15 @@
         "tab_stops_verified": 9
       },
       "vision_confidence": 0.88,
-      "vision_reasoning_ru": "Эвристическая проверка DOM и геометрии подтвердила соответствие правилу.",
+      "vision_reasoning": "Hybrid DOM & geometry heuristic probe verified full compliance.",
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Исключите необязательные поля из целевых форм (Suitability for the task), обеспечьте кнопку «Назад / Отменить» на каждом шаге диалога (Controllability) и добавьте встроенные подсказки формата до возникновения ошибки (Use error robustness)."
+      "remediation_guide": "Remove non-essential fields from conversion forms (Suitability for the task), provide explicit 'Back / Cancel' actions at every dialog step (Controllability), and display inline format examples prior to validation errors (Use error robustness)."
     },
     {
       "rule_id": "M3-TOUCH-01",
       "standard_family": "MATERIAL_3",
       "category": "Touch_Ergonomics",
-      "title_ru": "Сенсорная цель 48x48dp и минимальный зазор >= 8px между интерактивными элементами (Material 3)",
+      "title": "48x48dp Touch Target & >= 8px Inter-Target Spacing Gap (Material Design 3)",
       "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
       "verification_modality": "AUTOMATED_DOM",
       "outcome": "APPLIED_PASS",
@@ -494,13 +494,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_wcag_reflow_320_full.svg",
-      "remediation_guide_ru": "Используйте `gap: 8px` (или `0.5rem` / `12px`) на всех flex/grid контейнерах групп кнопок, чипсов и панелей действий, а для основных кнопок задайте `min-height: 48px`."
+      "remediation_guide": "Apply `gap: 8px` (or `0.5rem` / `12px`) on all flex/grid containers holding button groups, filter chips, or action bars, and size primary touch controls at `min-height: 48px`."
     },
     {
       "rule_id": "PAIR-EXPLAIN-G11",
       "standard_family": "GOOGLE_PAIR_V3",
       "category": "Human_AI_Interaction",
-      "title_ru": "Калибровка доверия: кликабельные источники, категориальная уверенность и исключение безопасности HAX G11",
+      "title": "Calibrated Trust: Clickable Source Citations, Categorical Confidence Cues & HAX G11 Security Exception",
       "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
       "verification_modality": "AI_MULTIMODAL_VISION",
       "outcome": "DOES_NOT_APPLY",
@@ -512,15 +512,15 @@
         "tab_stops_verified": 9
       },
       "vision_confidence": 0.88,
-      "vision_reasoning_ru": "Паттерн не обнаружен в DOM-дереве страницы (3-state HAX logic: DOES_NOT_APPLY).",
+      "vision_reasoning": "UI pattern not present in page DOM (3-state HAX logic: DOES_NOT_APPLY).",
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Рендерите интерактивные бейджи источников `<CitationChip href={source.url} title={source.title} />` рядом с утверждениями модели, используйте трехуровневые индикаторы уверенности (`High / Medium / Verify independently`) и скрывайте детали срабатывания антифрод-правил за общим статусным сообщением."
+      "remediation_guide": "Render interactive `<CitationChip href={source.url} title={source.title} />` badges alongside AI claims, use 3-tier categorical confidence labels (`High / Medium / Verify independently`), and abstract internal anti-abuse triggers behind safe high-level notices."
     },
     {
       "rule_id": "UXLAW-DOHERTY-01",
       "standard_family": "LAWS_OF_UX",
       "category": "Runtime_Performance",
-      "title_ru": "Порог Доэрти (Doherty Threshold — визуальный отклик интерфейса < 400 мс)",
+      "title": "Doherty Threshold — UI Visual Feedback Under 400ms",
       "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
       "verification_modality": "AUTOMATED_RUNTIME_PERF",
       "outcome": "APPLIED_PASS",
@@ -532,13 +532,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Внедрите Optimistic UI для быстрых мутаций (лайки, добавление в корзину, переключение табов), используйте `useOptimistic` / мгновенный переход состояния кнопки в `loading` за `< 50 мс` и выносите тяжелые вычисления из главного потока."
+      "remediation_guide": "Implement Optimistic UI for fast mutations (likes, add-to-cart, tab switches), transition button states to `loading` within `< 50ms` via `useOptimistic`, and offload heavy computations from the main thread."
     },
     {
       "rule_id": "UXLAW-GESTALT-01",
       "standard_family": "LAWS_OF_UX",
       "category": "Cognitive_Load",
-      "title_ru": "Законы Гештальта: Близость и Общая область (Расстояние Label-to-Input < 50% от шага между полями)",
+      "title": "Gestalt Proximity & Common Region — Label-to-Input Distance < 50% of Inter-Field Gap",
       "legal_or_business_risk": "MEDIUM_UX_FRICTION",
       "verification_modality": "AUTOMATED_DOM",
       "outcome": "APPLIED_PASS",
@@ -550,13 +550,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_wcag_reflow_320_full.svg",
-      "remediation_guide_ru": "Оборачивайте каждую пару `label + input + helper-text` в контейнер `.form-field { display: flex; flex-direction: column; gap: 6px; }`, а родительской форме задавайте `.form-stack { display: flex; flex-direction: column; gap: 20px; }`."
+      "remediation_guide": "Wrap each `label + input + helper-text` unit in a `.form-field { display: flex; flex-direction: column; gap: 6px; }` container, and space sibling field groups via `.form-stack { display: flex; flex-direction: column; gap: 20px; }`."
     },
     {
       "rule_id": "UXLAW-MILLER-CHUNKING-01",
       "standard_family": "LAWS_OF_UX",
       "category": "Cognitive_Load",
-      "title_ru": "Закон Миллера (5–9 элементов навигации) и Чанкинг (группировка длинных чисел по 4 знака)",
+      "title": "Miller's Law (5–9 Top-Level Nav Items) & 4-Digit Alphanumeric Chunking",
       "legal_or_business_risk": "MEDIUM_UX_FRICTION",
       "verification_modality": "AUTOMATED_DOM",
       "outcome": "APPLIED_PASS",
@@ -568,13 +568,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_wcag_reflow_320_full.svg",
-      "remediation_guide_ru": "Если в главном меню более 7–9 пунктов, объедините второстепенные разделы в категоризированное выпадающее меню или каталог. Форматируйте длинные числа через `Intl.NumberFormat('ru-RU')` и регулярные выражения группировки по 4 цифры."
+      "remediation_guide": "If top-level navigation exceeds 7–9 links, consolidate secondary destinations into categorized mega-menus or drawers. Format long numeric strings using `Intl.NumberFormat` and 4-digit regex grouping."
     },
     {
       "rule_id": "UXLAW-POSTEL-01",
       "standard_family": "LAWS_OF_UX",
       "category": "Forms_Checkout",
-      "title_ru": "Закон Постела (Postel's Law — либеральный прием пользовательского ввода и автонормализация)",
+      "title": "Postel's Law — Liberal Input Acceptance & Programmatic Normalization",
       "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
       "verification_modality": "AUTOMATED_DOM",
       "outcome": "APPLIED_PASS",
@@ -586,13 +586,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Уберите жесткие HTML-атрибуты `pattern=\"^[0-9]{10}$\"` и `maxlength`, обрезающие пробелы при вставке из буфера обмена. Нормализуйте строку перед валидацией: `const cleanValue = rawValue.replace(/[\\s\\-()]/g, '');` и автоматически применяйте маску чтения на лету."
+      "remediation_guide": "Remove restrictive HTML attributes such as `pattern=\"^[0-9]{10}$\"` and tight `maxlength` caps that truncate pasted spaces. Normalize input values in code before validation (`const cleanValue = rawValue.replace(/[\\s\\-()]/g, '');`) and format display masks automatically."
     },
     {
       "rule_id": "UXLAW-SERIAL-ZEIGARNIK-01",
       "standard_family": "LAWS_OF_UX",
       "category": "Navigation_Search",
-      "title_ru": "Эффект края (Serial Position) и Эффекты Зейгарник / Градиента цели (Индикаторы прогресса)",
+      "title": "Serial Position Effect & Zeigarnik / Goal-Gradient Progress Indicators",
       "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
       "verification_modality": "AI_MULTIMODAL_VISION",
       "outcome": "APPLIED_PASS",
@@ -604,15 +604,15 @@
         "tab_stops_verified": 9
       },
       "vision_confidence": 0.88,
-      "vision_reasoning_ru": "Эвристическая проверка DOM и геометрии подтвердила соответствие правилу.",
+      "vision_reasoning": "Hybrid DOM & geometry heuristic probe verified full compliance.",
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_wcag_reflow_320_full.svg",
-      "remediation_guide_ru": "Закрепите ключевые точки входа на крайних левой и правой позициях шапки/нижнего таб-бара. Во всех многошаговых формах добавьте `<ol aria-label='Этапы оформления'>` с `aria-current='step'` и визуальной шкалой выполненного прогресса."
+      "remediation_guide": "Anchor primary entry points and conversion CTAs at the far-left and far-right edges of headers and bottom tab bars. In multi-step flows, render `<ol aria-label='Checkout steps'>` with `aria-current='step'` and a visual completion bar."
     },
     {
       "rule_id": "UXLAW-VONRESTORFF-01",
       "standard_family": "LAWS_OF_UX",
       "category": "Visual_Hierarchy",
-      "title_ru": "Эффект фон Ресторфф (Von Restorff Isolation Effect — ровно 1 доминирующий Primary CTA на экран/блок)",
+      "title": "Von Restorff Isolation Effect — Single Visually Dominant Primary CTA per Viewport/Card",
       "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
       "verification_modality": "AI_MULTIMODAL_VISION",
       "outcome": "APPLIED_PASS",
@@ -624,15 +624,15 @@
         "tab_stops_verified": 9
       },
       "vision_confidence": 0.88,
-      "vision_reasoning_ru": "Эвристическая проверка DOM и геометрии подтвердила соответствие правилу.",
+      "vision_reasoning": "Hybrid DOM & geometry heuristic probe verified full compliance.",
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Разделите кнопки по трем уровням визуального веса: `Primary` (акцентная заливка `bg-primary text-on-primary` — максимум 1 на экран/форму), `Secondary` (`border-outline bg-transparent`) и `Tertiary` (`bg-transparent text-muted`)."
+      "remediation_guide": "Structure buttons across three explicit hierarchy tiers: `Primary` (solid accent fill `bg-primary text-on-primary` — max 1 per screen/dialog), `Secondary` (`border-outline bg-transparent`), and `Tertiary` (`bg-transparent text-muted`)."
     },
     {
       "rule_id": "WCAG-1.4.10",
       "standard_family": "WCAG_2_2",
       "category": "Accessibility",
-      "title_ru": "Адаптивный перенос контента на 320 CSS px без горизонтального скролла (Reflow)",
+      "title": "Reflow at 320 CSS px Without Horizontal Scrolling",
       "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
       "verification_modality": "AUTOMATED_DOM",
       "outcome": "APPLIED_PASS",
@@ -644,13 +644,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_wcag_reflow_320_full.svg",
-      "remediation_guide_ru": "Замените фиксированные ширины (`width: 400px`) на гибкие (`width: 100%; max-width: 400px`), используйте `flex-wrap: wrap`, `grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr))` и `overflow-wrap: break-word` для длинных заголовков и URL."
+      "remediation_guide": "Replace fixed pixel widths (`width: 400px`) with fluid sizing (`width: 100%; max-width: 400px`), use `flex-wrap: wrap`, `grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr))`, and apply `overflow-wrap: break-word` to long headings and URLs."
     },
     {
       "rule_id": "WCAG-1.4.12",
       "standard_family": "WCAG_2_2",
       "category": "Accessibility",
-      "title_ru": "Устойчивость верстки к пользовательским интервалам текста (Text Spacing)",
+      "title": "Text Spacing Resilience (1.5x Line, 2x Paragraph, 0.12em Letter, 0.16em Word)",
       "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
       "verification_modality": "AUTOMATED_DOM",
       "outcome": "APPLIED_PASS",
@@ -662,13 +662,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_wcag_reflow_320_full.svg",
-      "remediation_guide_ru": "Откажитесь от жесткой фиксации высоты текстовых блоков и кнопок (`height: 36px; overflow: hidden`). Используйте `min-height: 44px; height: auto; padding-block: 0.5rem;` и относительные единицы `rem`/`em`."
+      "remediation_guide": "Avoid fixed heights with hidden overflow on text containers and buttons (`height: 36px; overflow: hidden`). Use `min-height: 44px; height: auto; padding-block: 0.5rem;` and relative `rem`/`em` units."
     },
     {
       "rule_id": "WCAG-1.4.3",
       "standard_family": "WCAG_2_2",
       "category": "Accessibility",
-      "title_ru": "Минимальный контраст текста (>= 4.5:1 для обычного текста, >= 3.0:1 для крупного) и нетекстовых элементов UI (>= 3.0:1)",
+      "title": "Contrast Minimum (>= 4.5:1 Normal Text, >= 3.0:1 Large Text & UI Components)",
       "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
       "verification_modality": "AUTOMATED_DOM",
       "outcome": "APPLIED_PASS",
@@ -680,13 +680,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Используйте семантические дизайн-токены текста с проверкой по WCAG 2.2 AA (минимум `#595959` на белом `#FFFFFF` для обычного текста и `#767676` для рамок `input` и иконок)."
+      "remediation_guide": "Use semantic design tokens verified for WCAG 2.2 AA compliance (at least `#595959` on `#FFFFFF` white background for body/secondary text and `#767676` minimum for input borders and icons)."
     },
     {
       "rule_id": "WCAG-2.4.11",
       "standard_family": "WCAG_2_2",
       "category": "Accessibility",
-      "title_ru": "Фокус не перекрыт (Минимум) — Защита от перекрытия sticky-элементами",
+      "title": "Focus Not Obscured (Minimum) — Sticky Header & Footer Protection",
       "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
       "verification_modality": "AUTOMATED_DOM",
       "outcome": "APPLIED_PASS",
@@ -698,13 +698,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_wcag_reflow_320_full.svg",
-      "remediation_guide_ru": "Задайте CSS-свойства `scroll-padding-top` и `scroll-padding-bottom` на корневом скролл-контейнере (`html`), равные высоте фиксированных панелей (например, `html { scroll-padding-top: 80px; scroll-padding-bottom: 64px; }`), чтобы при перемещении по Tab браузер автоматически прокручивал элемент в видимую область вне перекрытия."
+      "remediation_guide": "Set `scroll-padding-top` and `scroll-padding-bottom` on the root scroll container (`html`) equal to the height of fixed/sticky toolbars (e.g., `html { scroll-padding-top: 80px; scroll-padding-bottom: 64px; }`) so the browser automatically scrolls focused controls clear of fixed overlays during Tab navigation."
     },
     {
       "rule_id": "WCAG-2.4.12",
       "standard_family": "WCAG_2_2",
       "category": "Accessibility",
-      "title_ru": "Фокус не перекрыт (Расширенный) — Полная видимость элемента в фокусе",
+      "title": "Focus Not Obscured (Enhanced) — Zero Overlap of Focused Component",
       "legal_or_business_risk": "BEST_PRACTICE_ENHANCEMENT",
       "verification_modality": "AUTOMATED_DOM",
       "outcome": "APPLIED_PASS",
@@ -716,13 +716,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Увеличьте `scroll-margin-block` на интерактивных элементах с запасом на толщину `outline-offset` (например, `:focus-visible { scroll-margin-block: 96px; }`) и обеспечьте закрытие любых всплывающих панелей по клавише `Escape`."
+      "remediation_guide": "Apply generous `scroll-margin-block` on interactive elements accounting for `outline-offset` (e.g., `:focus-visible { scroll-margin-block: 96px; }`) and ensure any non-modal floating banners can be dismissed with the `Escape` key."
     },
     {
       "rule_id": "WCAG-2.4.13",
       "standard_family": "WCAG_2_2",
       "category": "Accessibility",
-      "title_ru": "Визуальные характеристики индикатора фокуса (Контраст >= 3:1 и толщина >= 2px)",
+      "title": "Focus Appearance — Minimum 2px Perimeter & >= 3.0:1 Contrast Change",
       "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
       "verification_modality": "AUTOMATED_DOM",
       "outcome": "APPLIED_PASS",
@@ -734,13 +734,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Никогда не используйте `outline: none` без замены. Применяйте двухслойный универсальный индикатор фокуса: `:focus-visible { outline: 2px solid #005FCC; outline-offset: 2px; box-shadow: 0 0 0 4px #FFFFFF; }`, гарантирующий контраст >= 3:1 на любом фоне."
+      "remediation_guide": "Never apply `outline: none` without a high-contrast replacement. Use a dual-ring focus indicator: `:focus-visible { outline: 2px solid #005FCC; outline-offset: 2px; box-shadow: 0 0 0 4px #FFFFFF; }`, guaranteeing >= 3.0:1 contrast over any light or dark surface."
     },
     {
       "rule_id": "WCAG-2.5.7",
       "standard_family": "WCAG_2_2",
       "category": "Touch_Ergonomics",
-      "title_ru": "Альтернатива перетаскиванию (Dragging Movements — одиночный клик/тап)",
+      "title": "Dragging Movements — Single-Pointer Alternative Required",
       "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
       "verification_modality": "AI_MULTIMODAL_VISION",
       "outcome": "APPLIED_PASS",
@@ -752,15 +752,15 @@
         "tab_stops_verified": 9
       },
       "vision_confidence": 0.88,
-      "vision_reasoning_ru": "Эвристическая проверка DOM и геометрии подтвердила соответствие правилу.",
+      "vision_reasoning": "Hybrid DOM & geometry heuristic probe verified full compliance.",
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_mobile_375_full.svg",
-      "remediation_guide_ru": "Для всех `input[type='range']` и кастомных слайдеров добавьте связанные числовые поля `<input type='number'>` или кнопки шагового изменения (`-` / `+`). Для drag-and-drop карточек и списков добавьте контекстное меню («Переместить вверх/вниз/в колонку...»), вызываемое одиночным кликом."
+      "remediation_guide": "Pair all `input[type='range']` and custom sliders with linked `<input type='number'>` fields or step increment buttons (`-` / `+`). For drag-and-drop cards and sortable lists, provide a single-click action menu ('Move up / Move down / Move to column...')."
     },
     {
       "rule_id": "WCAG-2.5.8",
       "standard_family": "WCAG_2_2",
       "category": "Touch_Ergonomics",
-      "title_ru": "Минимальный размер цели (Target Size Minimum — жесткий порог 24x24 CSS px)",
+      "title": "Target Size (Minimum) — 24x24 CSS Pixels Floor",
       "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
       "verification_modality": "AUTOMATED_DOM",
       "outcome": "APPLIED_PASS",
@@ -772,13 +772,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_wcag_reflow_320_full.svg",
-      "remediation_guide_ru": "Задайте всем интерактивным элементам `min-width: 24px; min-height: 24px;` (рекомендуется `44px` по Apple HIG / `48px` по Material 3). Если визуальная иконка меньше (`16x16px`), расширьте кликабельную зону через `padding` или псевдоэлемент `::after { content: ''; position: absolute; inset: -8px; }`."
+      "remediation_guide": "Enforce `min-width: 24px; min-height: 24px;` on all interactive targets (`44px` recommended per Apple HIG / `48px` per Material 3). If the visual icon is smaller (`16x16px`), expand its hit area using `padding` or `::after { content: ''; position: absolute; inset: -8px; }`."
     },
     {
       "rule_id": "WCAG-3.2.6",
       "standard_family": "WCAG_2_2",
       "category": "Navigation_Search",
-      "title_ru": "Последовательное расположение помощи (Consistent Help)",
+      "title": "Consistent Help — Predictable DOM & Visual Placement",
       "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
       "verification_modality": "AUTOMATED_DOM",
       "outcome": "APPLIED_PASS",
@@ -790,13 +790,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_wcag_reflow_320_full.svg",
-      "remediation_guide_ru": "Разместите ссылку на помощь/поддержку или виджет чата в глобальном шаблоне `<header>` или `<footer>` в фиксированном порядке следования DOM, чтобы при переходе между страницами и изменении масштаба (до 200%) порядок обхода по `Tab` оставался неизменным."
+      "remediation_guide": "Place the Help/Support link or chat widget inside a shared global `<header>` or `<footer>` layout component in a fixed DOM position so its `Tab` order remains consistent across page transitions and zoom levels up to 200%."
     },
     {
       "rule_id": "WCAG-3.3.7",
       "standard_family": "WCAG_2_2",
       "category": "Forms_Checkout",
-      "title_ru": "Устранение избыточного ввода (Redundant Entry)",
+      "title": "Redundant Entry — Auto-Populate or Reuse Session Data",
       "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
       "verification_modality": "AUTOMATED_DOM",
       "outcome": "APPLIED_PASS",
@@ -808,13 +808,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Сохраняйте введенные поля формы в `sessionStorage`/стейт-менеджере между шагами визарда, добавьте чекбокс `«Совпадает с адресом доставки»` (по умолчанию отмеченный) и проставьте стандартные атрибуты `autocomplete` (`name`, `email`, `tel`, `shipping street-address`)."
+      "remediation_guide": "Persist form state in `sessionStorage` or your state store across wizard steps, default the `'Billing address same as shipping'` checkbox to checked, and bind standard HTML `autocomplete` tokens (`name`, `email`, `tel`, `shipping street-address`)."
     },
     {
       "rule_id": "WCAG-3.3.8",
       "standard_family": "WCAG_2_2",
       "category": "Account_SelfService",
-      "title_ru": "Доступная аутентификация (Минимум) — Запрет когнитивных тестов и блокировки вставки пароля",
+      "title": "Accessible Authentication (Minimum) — Allow Paste, Autocomplete & Passkeys",
       "legal_or_business_risk": "CRITICAL_LEGAL_EAA_ADA",
       "verification_modality": "AUTOMATED_DOM",
       "outcome": "APPLIED_PASS",
@@ -826,13 +826,13 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Удалите любые обработчики `onpaste=\"return false\"` или `e.preventDefault()` на событии `paste` у полей пароля и OTP. Укажите `autocomplete=\"username webauthn\"` и `autocomplete=\"current-password\"`, добавьте кнопку переключения видимости пароля (`type=\"text\"`/`type=\"password\"`) и интеграцию WebAuthn/Passkeys."
+      "remediation_guide": "Remove any `onpaste=\"return false\"` or `e.preventDefault()` paste listeners on password and OTP inputs. Set `autocomplete=\"username webauthn\"` and `autocomplete=\"current-password\"`, add a password visibility toggle button, and support WebAuthn/Passkeys."
     },
     {
       "rule_id": "WCAG-3.3.9",
       "standard_family": "WCAG_2_2",
       "category": "Account_SelfService",
-      "title_ru": "Доступная аутентификация (Расширенный) — Отказ от визуальных CAPTCHA с распознаванием объектов",
+      "title": "Accessible Authentication (Enhanced) — No Object-Recognition CAPTCHA Puzzles",
       "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
       "verification_modality": "AI_MULTIMODAL_VISION",
       "outcome": "APPLIED_PASS",
@@ -844,15 +844,15 @@
         "tab_stops_verified": 9
       },
       "vision_confidence": 0.88,
-      "vision_reasoning_ru": "Эвристическая проверка DOM и геометрии подтвердила соответствие правилу.",
+      "vision_reasoning": "Hybrid DOM & geometry heuristic probe verified full compliance.",
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_desktop_1440_full.svg",
-      "remediation_guide_ru": "Замените интерактивные визуальные CAPTCHA-головоломки на криптографическую аттестацию устройств (Private Access Tokens, WebAuthn Passkeys) или серверный анализ поведенческого риска без участия пользователя."
+      "remediation_guide": "Replace interactive visual CAPTCHA puzzles with cryptographic device attestation (Private Access Tokens, WebAuthn Passkeys) or passive server-side risk scoring."
     },
     {
       "rule_id": "WCAG3-SCORE-01",
       "standard_family": "WCAG_3_0_DRAFT",
       "category": "Accessibility",
-      "title_ru": "Матрица зрелости WCAG 3.0 Draft (Уровни Bronze, Silver, Gold и критические блокеры сценариев)",
+      "title": "WCAG 3.0 Draft Maturity Scoring (Bronze, Silver, Gold & Holistic Task Flows)",
       "legal_or_business_risk": "BEST_PRACTICE_ENHANCEMENT",
       "verification_modality": "AUTOMATED_DOM",
       "outcome": "APPLIED_PASS",
@@ -864,7 +864,7 @@
         "tab_stops_verified": 9
       },
       "screenshot_path": "D:\\Projects\\Google\\Ux_Ui_Checklist\\reports\\screenshots\\sample_audit_2026_wcag_reflow_320_full.svg",
-      "remediation_guide_ru": "Устраните все ошибки уровня `CRITICAL_LEGAL_EAA_ADA` для достижения базового уровня `BRONZE`, внедрите поддержку пользовательских медиа-запросов (`prefers-reduced-motion`, `prefers-contrast`, `prefers-color-scheme`) для уровня `SILVER` и проведите сквозное тестирование ключевых сценариев с клавиатуры и скринридера для уровня `GOLD`."
+      "remediation_guide": "Eliminate all `CRITICAL_LEGAL_EAA_ADA` violations to reach the baseline `BRONZE` tier, implement user-preference media queries (`prefers-reduced-motion`, `prefers-contrast`, `prefers-color-scheme`) for `SILVER`, and validate end-to-end keyboard/screen-reader task flows for `GOLD`."
     }
   ],
   "artifacts": {

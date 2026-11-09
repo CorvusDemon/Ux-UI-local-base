@@ -7,16 +7,14 @@
  * 4. Interactive Hitbox & Gap Geometry Probes (WCAG 2.5.8 24x24px, Apple HIG 44x44pt, Material 3 48x48dp + 8px gap)
  * 5. Runtime Core Web Vitals Telemetry via PerformanceObserver (LCP <= 2500ms, INP <= 200ms, CLS < 0.1)
  * 6. Full-Page & Component Screenshot Capture + Gemini Multimodal Vision Heuristic Evaluator
- * 7. Structured JSON & Russian Markdown Audit Report Generator in /reports/
+ * 7. Structured JSON & Markdown Audit Report Generator in /reports/
  */
 
 import fs from "node:fs";
-import http from "node:http";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import {
   initializeAndSeedDatabase,
-  loadAllSeedRulesFromJson,
   persistAuditReportToDb,
   queryUxRulesFromDb,
 } from "../database/init_db.ts";
@@ -90,19 +88,19 @@ async function evaluateWithGeminiMultimodalVision(
 ): Promise<{
   outcome: EvaluationOutcome;
   confidence: number;
-  reasoning_ru: string;
+  reasoning: string;
 }> {
   const apiKey = process.env.GEMINI_API_KEY || process.env.GOOGLE_API_KEY;
   if (!apiKey || !fs.existsSync(screenshotPath)) {
     return {
       outcome: domFallbackOutcome,
       confidence: 0.88,
-      reasoning_ru:
+      reasoning:
         domFallbackOutcome === "DOES_NOT_APPLY"
-          ? "Паттерн не обнаружен в DOM-дереве страницы (3-state HAX logic: DOES_NOT_APPLY)."
+          ? "UI pattern not present in page DOM (3-state HAX logic: DOES_NOT_APPLY)."
           : domFallbackOutcome === "APPLIED_PASS"
-          ? "Эвристическая проверка DOM и геометрии подтвердила соответствие правилу."
-          : "Обнаружено нарушение эвристики и пороговых метрик в DOM-структуре.",
+          ? "Hybrid DOM & geometry heuristic probe verified full compliance."
+          : "DOM and threshold probe detected a heuristic violation.",
     };
   }
 
@@ -112,8 +110,8 @@ async function evaluateWithGeminiMultimodalVision(
     const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
 
     const promptText = `You are a Principal UX/UI & Accessibility Auditor (2026 Standards).
-Evaluate rule "${rule.id}" (${rule.title_ru}) on the provided webpage screenshot.
-Normative Requirement: ${rule.description_ru}
+Evaluate rule "${rule.id}" (${rule.title}) on the provided webpage screenshot.
+Normative Requirement: ${rule.description}
 Specific Vision Heuristic: ${rule.vision_prompt_heuristic}
 Quantitative Thresholds: ${JSON.stringify(rule.quantitative_threshold)}
 
@@ -121,7 +119,7 @@ Respond strictly in JSON format matching this schema:
 {
   "outcome": "APPLIED_PASS" | "VIOLATED_FAIL" | "DOES_NOT_APPLY",
   "confidence": 0.0 to 1.0,
-  "reasoning_ru": "Concise architectural explanation in Russian"
+  "reasoning": "Concise architectural explanation in English"
 }`;
 
     const response = await fetch(endpoint, {
@@ -159,7 +157,7 @@ Respond strictly in JSON format matching this schema:
     const parsed = JSON.parse(rawJson) as {
       outcome?: EvaluationOutcome;
       confidence?: number;
-      reasoning_ru?: string;
+      reasoning?: string;
     };
 
     const validOutcomes: EvaluationOutcome[] = [
@@ -174,15 +172,15 @@ Respond strictly in JSON format matching this schema:
     return {
       outcome,
       confidence: typeof parsed.confidence === "number" ? parsed.confidence : 0.92,
-      reasoning_ru:
-        parsed.reasoning_ru ||
-        "Оценка выполнена мультимодальной моделью Gemini Vision.",
+      reasoning:
+        parsed.reasoning ||
+        "Evaluated by Gemini Multimodal Vision model.",
     };
   } catch (err) {
     return {
       outcome: domFallbackOutcome,
       confidence: 0.85,
-      reasoning_ru: `Резервная гибридная DOM-оценка (${(err as Error).message}).`,
+      reasoning: `Hybrid DOM fallback evaluation (${(err as Error).message}).`,
     };
   }
 }
@@ -454,7 +452,6 @@ export async function runHybridUxAudit(options: {
           }
         }
 
-        // Override WCAG 2.4.11 & 2.5.8 & HIG-TOUCH-01 with full Tab-sequence telemetry
         if (obscuredFocusSelectors.length > 0) {
           ruleDomOutcomes["WCAG-2.4.11"] = "VIOLATED_FAIL";
           ruleDomOutcomes["WCAG-2.4.12"] = "VIOLATED_FAIL";
@@ -527,31 +524,50 @@ export async function runHybridUxAudit(options: {
       const hasPasswordInput = /type=["']password["']/i.test(htmlSource);
       const hasWebAuthn = /webauthn/i.test(htmlSource);
       const hasAiUi = /data-ai|copilot|assistant/i.test(htmlSource);
-      const hasPdp = /itemtype.*Product|data-page-type=["']product["']/i.test(htmlSource);
+      const hasPdp =
+        /itemtype.*Product|data-page-type=["']product["']/i.test(htmlSource);
       const hasSavedCards = /saved-card|payment-method/i.test(htmlSource);
       const hasEmptyState = /class=["'][^"']*empty/i.test(htmlSource);
 
       for (const rule of rules) {
-        if (rule.category === "Human_AI_Interaction" && !hasAiUi && rule.id !== "HAX-G14") {
+        if (
+          rule.category === "Human_AI_Interaction" &&
+          !hasAiUi &&
+          rule.id !== "HAX-G14"
+        ) {
           ruleDomOutcomes[rule.id] = "DOES_NOT_APPLY";
-        } else if ((rule.id === "BAYMARD-PDP-01" || rule.id === "BAYMARD-PDP-02") && !hasPdp) {
+        } else if (
+          (rule.id === "BAYMARD-PDP-01" || rule.id === "BAYMARD-PDP-02") &&
+          !hasPdp
+        ) {
           ruleDomOutcomes[rule.id] = "DOES_NOT_APPLY";
         } else if (rule.id === "BAYMARD-CHK-02" && !hasSavedCards) {
           ruleDomOutcomes[rule.id] = "DOES_NOT_APPLY";
         } else if (rule.id === "CARBON-STATE-01" && !hasEmptyState) {
           ruleDomOutcomes[rule.id] = "DOES_NOT_APPLY";
         } else if (rule.id === "WCAG-2.4.11" || rule.id === "WCAG-2.4.12") {
-          ruleDomOutcomes[rule.id] = hasStickyPadding ? "APPLIED_PASS" : "VIOLATED_FAIL";
+          ruleDomOutcomes[rule.id] = hasStickyPadding
+            ? "APPLIED_PASS"
+            : "VIOLATED_FAIL";
         } else if (rule.id === "WCAG-2.4.13") {
-          ruleDomOutcomes[rule.id] = hasFocusVisible ? "APPLIED_PASS" : "VIOLATED_FAIL";
+          ruleDomOutcomes[rule.id] = hasFocusVisible
+            ? "APPLIED_PASS"
+            : "VIOLATED_FAIL";
         } else if (rule.id === "HIG-GLASS-02") {
-          ruleDomOutcomes[rule.id] = hasReducedMotion ? "APPLIED_PASS" : "VIOLATED_FAIL";
+          ruleDomOutcomes[rule.id] = hasReducedMotion
+            ? "APPLIED_PASS"
+            : "VIOLATED_FAIL";
         } else if (rule.id === "HIG-GLASS-01") {
-          ruleDomOutcomes[rule.id] = hasGlassBlur ? "APPLIED_PASS" : "DOES_NOT_APPLY";
+          ruleDomOutcomes[rule.id] = hasGlassBlur
+            ? "APPLIED_PASS"
+            : "DOES_NOT_APPLY";
         } else if (rule.id === "BAYMARD-CHK-01") {
-          ruleDomOutcomes[rule.id] = hasCardInput ? "APPLIED_PASS" : "DOES_NOT_APPLY";
+          ruleDomOutcomes[rule.id] = hasCardInput
+            ? "APPLIED_PASS"
+            : "DOES_NOT_APPLY";
         } else if (rule.id === "WCAG-3.3.8" || rule.id === "WCAG-3.3.9") {
-          ruleDomOutcomes[rule.id] = hasPasswordInput && hasWebAuthn ? "APPLIED_PASS" : "DOES_NOT_APPLY";
+          ruleDomOutcomes[rule.id] =
+            hasPasswordInput && hasWebAuthn ? "APPLIED_PASS" : "DOES_NOT_APPLY";
         } else {
           ruleDomOutcomes[rule.id] = "APPLIED_PASS";
         }
@@ -598,7 +614,6 @@ export async function runHybridUxAudit(options: {
     let outcome: EvaluationOutcome =
       vpData.ruleDomOutcomes[rule.id] ?? "APPLIED_PASS";
 
-    // Aggregate across all 3 viewports: if any viewport violated the rule, mark VIOLATED_FAIL
     for (const vp of MANDATORY_VIEWPORTS) {
       if (viewportTelemetries[vp.name].ruleDomOutcomes[rule.id] === "VIOLATED_FAIL") {
         outcome = "VIOLATED_FAIL";
@@ -606,7 +621,7 @@ export async function runHybridUxAudit(options: {
     }
 
     let visionConfidence: number | undefined;
-    let visionReasoningRu: string | undefined;
+    let visionReasoning: string | undefined;
 
     if (rule.verification_modality === "AI_MULTIMODAL_VISION") {
       const visionEval = await evaluateWithGeminiMultimodalVision(
@@ -616,7 +631,7 @@ export async function runHybridUxAudit(options: {
       );
       outcome = visionEval.outcome;
       visionConfidence = visionEval.confidence;
-      visionReasoningRu = visionEval.reasoning_ru;
+      visionReasoning = visionEval.reasoning;
     }
 
     const affectedSelectors: string[] = [];
@@ -632,7 +647,7 @@ export async function runHybridUxAudit(options: {
       rule_id: rule.id,
       standard_family: rule.standard_family,
       category: rule.category,
-      title_ru: rule.title_ru,
+      title: rule.title,
       legal_or_business_risk: rule.legal_or_business_risk,
       verification_modality: rule.verification_modality,
       outcome,
@@ -646,9 +661,9 @@ export async function runHybridUxAudit(options: {
       affected_selectors:
         affectedSelectors.length > 0 ? affectedSelectors.slice(0, 10) : undefined,
       vision_confidence: visionConfidence,
-      vision_reasoning_ru: visionReasoningRu,
+      vision_reasoning: visionReasoning,
       screenshot_path: vpData.fullPageScreenshotPath,
-      remediation_guide_ru: rule.remediation_guide_ru,
+      remediation_guide: rule.remediation_guide,
     });
   }
 
@@ -723,7 +738,7 @@ export async function runHybridUxAudit(options: {
   fs.writeFileSync(jsonReportPath, JSON.stringify(report, null, 2), "utf-8");
   fs.writeFileSync(
     markdownReportPath,
-    generateRussianMarkdownReport(report),
+    generateMarkdownReport(report),
     "utf-8"
   );
   persistAuditReportToDb(report);
@@ -731,40 +746,40 @@ export async function runHybridUxAudit(options: {
   return report;
 }
 
-function generateRussianMarkdownReport(report: AuditReport): string {
+function generateMarkdownReport(report: AuditReport): string {
   const lines: string[] = [
-    `# Отчет гибридного UX/UI и Accessibility аудита (Стандарты 2026)`,
+    `# Hybrid UX/UI & Accessibility Audit Report (2026 Standards)`,
     ``,
-    `- **ID отчета**: \`${report.report_id}\``,
-    `- **Целевой URL**: ${report.target_url}`,
-    `- **Дата и время**: \`${report.timestamp_iso}\``,
-    `- **Достигнутый уровень WCAG 3.0 Draft**: **${report.summary.wcag_3_0_tier_achieved}**`,
+    `- **Report ID**: \`${report.report_id}\``,
+    `- **Target URL**: ${report.target_url}`,
+    `- **Timestamp**: \`${report.timestamp_iso}\``,
+    `- **WCAG 3.0 Draft Tier Achieved**: **${report.summary.wcag_3_0_tier_achieved}**`,
     ``,
-    `## 1. Сводная статистика (Microsoft HAX 3-State Evaluation)`,
-    `| Метрика | Значение |`,
+    `## 1. Executive Summary (Microsoft HAX 3-State Evaluation)`,
+    `| Metric | Value |`,
     `| :--- | :--- |`,
-    `| Всего проверено правил | **${report.summary.total_rules_evaluated}** |`,
-    `| Успешно пройдено (\`APPLIED_PASS\`) | **${report.summary.applied_pass_count}** |`,
-    `| Обнаружено нарушений (\`VIOLATED_FAIL\`) | **${report.summary.violated_fail_count}** |`,
-    `| Неприменимо к странице (\`DOES_NOT_APPLY\`) | **${report.summary.does_not_apply_count}** |`,
-    `| Юридические риски EAA/ADA (\`CRITICAL_LEGAL_EAA_ADA\`) | **${report.summary.critical_legal_failures}** |`,
-    `| Критические блокеры конверсии (\`HIGH_CONVERSION_BLOCKER\`) | **${report.summary.high_conversion_blockers}** |`,
+    `| Total Rules Evaluated | **${report.summary.total_rules_evaluated}** |`,
+    `| Applied & Passed (\`APPLIED_PASS\`) | **${report.summary.applied_pass_count}** |`,
+    `| Violated & Failed (\`VIOLATED_FAIL\`) | **${report.summary.violated_fail_count}** |`,
+    `| Does Not Apply (\`DOES_NOT_APPLY\`) | **${report.summary.does_not_apply_count}** |`,
+    `| Critical Legal EAA/ADA Failures (\`CRITICAL_LEGAL_EAA_ADA\`) | **${report.summary.critical_legal_failures}** |`,
+    `| High Conversion Blockers (\`HIGH_CONVERSION_BLOCKER\`) | **${report.summary.high_conversion_blockers}** |`,
     ``,
-    `## 2. Метрики Core Web Vitals 2026 по вьюпортам`,
-    `| Вьюпорт | Разрешение | LCP (порог <= 2500 мс) | INP (порог <= 200 мс) | CLS (порог < 0.1) |`,
+    `## 2. Core Web Vitals 2026 by Viewport`,
+    `| Viewport | Resolution | LCP (<= 2500ms) | INP (<= 200ms) | CLS (< 0.1) |`,
     `| :--- | :--- | :--- | :--- | :--- |`,
   ];
 
   for (const vp of report.viewports_tested) {
     const wv = report.web_vitals_by_viewport[vp.name];
     lines.push(
-      `| \`${vp.name}\` | \`${vp.width}x${vp.height}\` | \`${wv.lcp_ms ?? 0} мс\` | \`${wv.inp_ms ?? 0} мс\` | \`${wv.cls_score}\` |`
+      `| \`${vp.name}\` | \`${vp.width}x${vp.height}\` | \`${wv.lcp_ms ?? 0}ms\` | \`${wv.inp_ms ?? 0}ms\` | \`${wv.cls_score}\` |`
     );
   }
 
-  lines.push(``, `## 3. Детальная матрица проверки правил (36 правил / 11 стандартов)`, ``);
+  lines.push(``, `## 3. Detailed Rule Evaluation Matrix (43 Rules / 11 Standards)`, ``);
   lines.push(
-    `| ID | Стандарт | Категория | Статус | Риск | Правило и руководство по исправлению |`
+    `| ID | Standard | Category | Outcome | Risk Level | Rule & Remediation Guide |`
   );
   lines.push(`| :--- | :--- | :--- | :--- | :--- | :--- |`);
 
@@ -777,13 +792,13 @@ function generateRussianMarkdownReport(report: AuditReport): string {
         : "⚪ `DOES_NOT_APPLY`";
     const selectorsNote =
       r.affected_selectors && r.affected_selectors.length > 0
-        ? `<br>**Затронутые элементы**: \`${r.affected_selectors.join(", ")}\``
+        ? `<br>**Affected Elements**: \`${r.affected_selectors.join(", ")}\``
         : "";
-    const visionNote = r.vision_reasoning_ru
-      ? `<br>**AI Vision**: ${r.vision_reasoning_ru}`
+    const visionNote = r.vision_reasoning
+      ? `<br>**AI Vision**: ${r.vision_reasoning}`
       : "";
     lines.push(
-      `| \`${r.rule_id}\` | \`${r.standard_family}\` | \`${r.category}\` | ${badge} | \`${r.legal_or_business_risk}\` | **${r.title_ru}**${selectorsNote}${visionNote}<br>*Ремедиация*: ${r.remediation_guide_ru} |`
+      `| \`${r.rule_id}\` | \`${r.standard_family}\` | \`${r.category}\` | ${badge} | \`${r.legal_or_business_risk}\` | **${r.title}**${selectorsNote}${visionNote}<br>*Remediation*: ${r.remediation_guide} |`
     );
   }
 
@@ -791,14 +806,14 @@ function generateRussianMarkdownReport(report: AuditReport): string {
 }
 
 /**
- * Starts a temporary local demo HTTP server with intentional UX/UI patterns to test the audit runner
+ * Generates a self-test HTML fixture to verify the audit runner across all 3 viewports
  */
 async function startSelfTestServer(): Promise<{
   url: string;
   close: () => Promise<void>;
 }> {
   const html = `<!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -825,34 +840,34 @@ async function startSelfTestServer(): Promise<{
 </head>
 <body>
   <header>
-    <a href="#main">Главная</a>
-    <nav aria-label="Основная навигация">
-      <a href="#catalog">Каталог</a>
-      <a href="#checkout">Оплата</a>
-      <a href="/help">Помощь и поддержка</a>
-      <a href="/account" aria-label="Мой аккаунт">Профиль</a>
+    <a href="#main">Home</a>
+    <nav aria-label="Primary Navigation">
+      <a href="#catalog">Catalog</a>
+      <a href="#checkout">Checkout</a>
+      <a href="/help">Help & Support</a>
+      <a href="/account" aria-label="My Account">Account</a>
     </nav>
   </header>
   <main id="main">
-    <h1>Оформление заказа (Этап 2 из 3)</h1>
-    <p>Проверочный стенд стандартов WCAG 2.2, Apple HIG 26, Material 3, Baymard 2026 и Laws of UX.</p>
+    <h1>Checkout (Step 2 of 3)</h1>
+    <p>Reference benchmark storefront verifying WCAG 2.2, Apple HIG 26, Material 3, Baymard 2026, and Laws of UX.</p>
     <form class="form-stack" action="/checkout">
       <div class="form-field">
-        <label for="cc-num">Номер банковской карты</label>
+        <label for="cc-num">Credit Card Number</label>
         <input id="cc-num" name="cardNumber" type="text" inputmode="numeric" autocomplete="cc-number" maxlength="23" placeholder="0000 0000 0000 0000" />
       </div>
       <div class="form-field">
-        <label for="user-pwd">Пароль аккаунта (или вход по Passkey)</label>
+        <label for="user-pwd">Account Password (or Sign in with Passkey)</label>
         <input id="user-pwd" name="password" type="password" autocomplete="current-password webauthn" />
       </div>
       <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-        <button type="submit" class="btn-primary">Оплатить заказ</button>
-        <button type="button" class="btn-secondary">Назад в корзину</button>
+        <button type="submit" class="btn-primary">Complete Order</button>
+        <button type="button" class="btn-secondary">Back to Cart</button>
       </div>
     </form>
   </main>
   <footer>
-    <a href="mailto:support@example.com">Служба поддержки</a>
+    <a href="mailto:support@example.com">Customer Support</a>
   </footer>
 </body>
 </html>`;

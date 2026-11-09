@@ -14,8 +14,8 @@
         "id",
         "standard_family",
         "category",
-        "title_ru",
-        "description_ru",
+        "title",
+        "description",
         "legal_or_business_risk",
         "target_states",
         "quantitative_threshold",
@@ -23,7 +23,7 @@
         "evaluation_outcomes",
         "playwright_check_snippet",
         "vision_prompt_heuristic",
-        "remediation_guide_ru"
+        "remediation_guide"
       ],
       "additionalProperties": false,
       "properties": {
@@ -62,15 +62,15 @@
             "Cognitive_Load"
           ]
         },
-        "title_ru": {
+        "title": {
           "type": "string",
           "minLength": 5,
-          "description": "Concise normative rule title in Russian"
+          "description": "Concise normative rule title"
         },
-        "description_ru": {
+        "description": {
           "type": "string",
           "minLength": 20,
-          "description": "Detailed normative requirement and rationale in Russian"
+          "description": "Detailed normative requirement and rationale"
         },
         "legal_or_business_risk": {
           "type": "string",
@@ -162,10 +162,10 @@
           "minLength": 10,
           "description": "Specific instruction for Gemini Multimodal Vision to evaluate on a screenshot"
         },
-        "remediation_guide_ru": {
+        "remediation_guide": {
           "type": "string",
           "minLength": 15,
-          "description": "Actionable code and design fix in Russian"
+          "description": "Actionable code and design fix"
         },
         "wcag_3_0_tier": {
           "type": "string",
@@ -187,4 +187,3 @@
     }
   }
 }
-

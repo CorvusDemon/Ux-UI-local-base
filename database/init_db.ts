@@ -48,16 +48,13 @@ export function initializeAndSeedDatabase(dbPath: string = DB_PATH): {
   const schemaSql = fs.readFileSync(SCHEMA_SQL_PATH, "utf-8");
   db.exec(schemaSql);
 
-  db.exec("DELETE FROM ux_audit_rules;");
-  db.exec("DELETE FROM ux_audit_rules_fts;");
-
   const insertStmt = db.prepare(`
     INSERT INTO ux_audit_rules (
       id,
       standard_family,
       category,
-      title_ru,
-      description_ru,
+      title,
+      description,
       legal_or_business_risk,
       target_states_json,
       quantitative_threshold_json,
@@ -65,7 +62,7 @@ export function initializeAndSeedDatabase(dbPath: string = DB_PATH): {
       evaluation_outcomes_json,
       playwright_check_snippet,
       vision_prompt_heuristic,
-      remediation_guide_ru,
+      remediation_guide,
       wcag_3_0_tier,
       iso_9241_110_principle
     ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
@@ -79,8 +76,8 @@ export function initializeAndSeedDatabase(dbPath: string = DB_PATH): {
         rule.id,
         rule.standard_family,
         rule.category,
-        rule.title_ru,
-        rule.description_ru,
+        rule.title,
+        rule.description,
         rule.legal_or_business_risk,
         JSON.stringify(rule.target_states),
         JSON.stringify(rule.quantitative_threshold),
@@ -88,7 +85,7 @@ export function initializeAndSeedDatabase(dbPath: string = DB_PATH): {
         JSON.stringify(rule.evaluation_outcomes),
         rule.playwright_check_snippet,
         rule.vision_prompt_heuristic,
-        rule.remediation_guide_ru,
+        rule.remediation_guide,
         rule.wcag_3_0_tier ?? null,
         rule.iso_9241_110_principle ?? null
       );
@@ -109,8 +106,8 @@ function hydrateRuleRow(row: Record<string, unknown>): UxAuditRule {
     id: String(row.id),
     standard_family: String(row.standard_family) as UxAuditRule["standard_family"],
     category: String(row.category) as UxAuditRule["category"],
-    title_ru: String(row.title_ru),
-    description_ru: String(row.description_ru),
+    title: String(row.title),
+    description: String(row.description),
     legal_or_business_risk: String(
       row.legal_or_business_risk
     ) as UxAuditRule["legal_or_business_risk"],
@@ -122,8 +119,10 @@ function hydrateRuleRow(row: Record<string, unknown>): UxAuditRule {
     evaluation_outcomes: JSON.parse(String(row.evaluation_outcomes_json)),
     playwright_check_snippet: String(row.playwright_check_snippet),
     vision_prompt_heuristic: String(row.vision_prompt_heuristic),
-    remediation_guide_ru: String(row.remediation_guide_ru),
-    ...(row.wcag_3_0_tier ? { wcag_3_0_tier: String(row.wcag_3_0_tier) as UxAuditRule["wcag_3_0_tier"] } : {}),
+    remediation_guide: String(row.remediation_guide),
+    ...(row.wcag_3_0_tier
+      ? { wcag_3_0_tier: String(row.wcag_3_0_tier) as UxAuditRule["wcag_3_0_tier"] }
+      : {}),
     ...(row.iso_9241_110_principle
       ? {
           iso_9241_110_principle: String(
@@ -173,7 +172,7 @@ export function queryUxRulesFromDb(filters: {
     if (filters.search_query && filters.search_query.trim()) {
       const q = `%${filters.search_query.trim()}%`;
       conditions.push(
-        "(r.id LIKE ? OR r.title_ru LIKE ? OR r.description_ru LIKE ? OR r.remediation_guide_ru LIKE ?)"
+        "(r.id LIKE ? OR r.title LIKE ? OR r.description LIKE ? OR r.remediation_guide LIKE ?)"
       );
       params.push(q, q, q, q);
     }
@@ -251,7 +250,7 @@ export function persistAuditReportToDb(report: AuditReport): void {
         measured_value_json,
         affected_selectors_json,
         vision_confidence,
-        vision_reasoning_ru,
+        vision_reasoning,
         screenshot_path
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
@@ -265,7 +264,7 @@ export function persistAuditReportToDb(report: AuditReport): void {
         res.measured_value ? JSON.stringify(res.measured_value) : null,
         res.affected_selectors ? JSON.stringify(res.affected_selectors) : null,
         res.vision_confidence ?? null,
-        res.vision_reasoning_ru ?? null,
+        res.vision_reasoning ?? null,
         res.screenshot_path ?? null
       );
     }

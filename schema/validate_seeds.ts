@@ -66,7 +66,7 @@ export function validateAllSeedRules(): ValidationSummary {
       const prefix = `[${file}#${idx} (${rule.id || "MISSING_ID"})]`;
 
       for (const req of requiredFields) {
-        if (!(req in rule) || (rule as Record<string, unknown>)[req] === undefined) {
+        if (!(req in rule) || (rule as unknown as Record<string, unknown>)[req] === undefined) {
           errors.push(`${prefix} Missing required field: '${req}'`);
         }
       }
@@ -124,14 +124,14 @@ export function validateAllSeedRules(): ValidationSummary {
         );
       }
 
-      if (!rule.title_ru || rule.title_ru.trim().length < 5) {
-        errors.push(`${prefix} title_ru must be at least 5 characters`);
+      if (!rule.title || rule.title.trim().length < 5) {
+        errors.push(`${prefix} title must be at least 5 characters`);
       }
-      if (!rule.description_ru || rule.description_ru.trim().length < 20) {
-        errors.push(`${prefix} description_ru must be at least 20 characters`);
+      if (!rule.description || rule.description.trim().length < 20) {
+        errors.push(`${prefix} description must be at least 20 characters`);
       }
-      if (!rule.remediation_guide_ru || rule.remediation_guide_ru.trim().length < 15) {
-        errors.push(`${prefix} remediation_guide_ru must be at least 15 characters`);
+      if (!rule.remediation_guide || rule.remediation_guide.trim().length < 15) {
+        errors.push(`${prefix} remediation_guide must be at least 15 characters`);
       }
     }
   }

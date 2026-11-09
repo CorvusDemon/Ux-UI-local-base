@@ -1,11 +1,17 @@
 -- =============================================================================
 -- UX/UI & Accessibility Audit Database — SQLite 3 Schema (2026 Standards)
--- Supports FTS5 full-text search in Russian/English, JSON1 threshold queries,
+-- Supports FTS5 full-text search, JSON1 threshold queries,
 -- and relational audit run telemetry.
 -- =============================================================================
 
 PRAGMA foreign_keys = ON;
 PRAGMA journal_mode = WAL;
+
+DROP TRIGGER IF EXISTS ux_audit_rules_ai;
+DROP TABLE IF EXISTS ux_audit_rules_fts;
+DROP TABLE IF EXISTS audit_rule_results;
+DROP TABLE IF EXISTS audit_runs;
+DROP TABLE IF EXISTS ux_audit_rules;
 
 CREATE TABLE IF NOT EXISTS ux_audit_rules (
     id TEXT PRIMARY KEY,
@@ -37,8 +43,8 @@ CREATE TABLE IF NOT EXISTS ux_audit_rules (
             'Cognitive_Load'
         )
     ),
-    title_ru TEXT NOT NULL,
-    description_ru TEXT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
     legal_or_business_risk TEXT NOT NULL CHECK (
         legal_or_business_risk IN (
             'CRITICAL_LEGAL_EAA_ADA',
@@ -60,7 +66,7 @@ CREATE TABLE IF NOT EXISTS ux_audit_rules (
     evaluation_outcomes_json TEXT NOT NULL DEFAULT '["APPLIED_PASS","VIOLATED_FAIL","DOES_NOT_APPLY"]',
     playwright_check_snippet TEXT NOT NULL,
     vision_prompt_heuristic TEXT NOT NULL,
-    remediation_guide_ru TEXT NOT NULL,
+    remediation_guide TEXT NOT NULL,
     wcag_3_0_tier TEXT CHECK (wcag_3_0_tier IN ('BRONZE', 'SILVER', 'GOLD') OR wcag_3_0_tier IS NULL),
     iso_9241_110_principle TEXT CHECK (
         iso_9241_110_principle IN (
@@ -82,21 +88,21 @@ CREATE INDEX IF NOT EXISTS idx_rules_category ON ux_audit_rules(category);
 CREATE INDEX IF NOT EXISTS idx_rules_risk ON ux_audit_rules(legal_or_business_risk);
 CREATE INDEX IF NOT EXISTS idx_rules_modality ON ux_audit_rules(verification_modality);
 
--- Full-Text Search (FTS5) virtual table for fast MCP semantic/keyword queries in Russian & English
+-- Full-Text Search (FTS5) virtual table for fast MCP semantic/keyword queries
 CREATE VIRTUAL TABLE IF NOT EXISTS ux_audit_rules_fts USING fts5(
     id,
     standard_family,
     category,
-    title_ru,
-    description_ru,
-    remediation_guide_ru,
+    title,
+    description,
+    remediation_guide,
     content='ux_audit_rules',
     content_rowid='rowid'
 );
 
 CREATE TRIGGER IF NOT EXISTS ux_audit_rules_ai AFTER INSERT ON ux_audit_rules BEGIN
-    INSERT INTO ux_audit_rules_fts(rowid, id, standard_family, category, title_ru, description_ru, remediation_guide_ru)
-    VALUES (new.rowid, new.id, new.standard_family, new.category, new.title_ru, new.description_ru, new.remediation_guide_ru);
+    INSERT INTO ux_audit_rules_fts(rowid, id, standard_family, category, title, description, remediation_guide)
+    VALUES (new.rowid, new.id, new.standard_family, new.category, new.title, new.description, new.remediation_guide);
 END;
 
 -- Audit Runs & Rule Outcomes History
@@ -125,10 +131,9 @@ CREATE TABLE IF NOT EXISTS audit_rule_results (
     measured_value_json TEXT,
     affected_selectors_json TEXT,
     vision_confidence REAL,
-    vision_reasoning_ru TEXT,
+    vision_reasoning TEXT,
     screenshot_path TEXT
 );
 
 CREATE INDEX IF NOT EXISTS idx_audit_results_report ON audit_rule_results(report_id);
 CREATE INDEX IF NOT EXISTS idx_audit_results_outcome ON audit_rule_results(outcome);
-

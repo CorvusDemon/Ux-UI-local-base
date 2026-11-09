@@ -1,35 +1,35 @@
-# Руководство по участию в разработке (Contributing Guide)
+# Contributing Guide
 
-Спасибо за интерес к развитию **2026 UX/UI & Accessibility Audit Database & Hybrid Testing Engine**!
+Thank you for contributing to the **2026 UX/UI & Accessibility Audit Database & Hybrid Testing Engine**!
 
-## Как добавить новое правило UX/UI в базу знаний
+## How to Add a New UX/UI Rule
 
-Все правила хранятся в модульных JSON-файлах в директории `/database/seed_rules/` и подчиняются строгой схеме `/schema/ux_rules_schema.json` и интерфейсу `UxAuditRule` в `/schema/types.ts`.
+All normative rules live in modular JSON files inside `/database/seed_rules/` and are strictly validated against `/schema/ux_rules_schema.json` and the `UxAuditRule` interface in `/schema/types.ts`.
 
-### Шаг 1. Выберите соответствующий модуль
-1. `01_wcag_2_2_and_3_0.json` — критерии доступности WCAG 2.2 и WCAG 3.0 Draft.
-2. `02_platform_design_systems.json` — Apple HIG (iOS 26 / Liquid Glass), Material Design 3, IBM Carbon.
-3. `03_ergonomics_and_laws_of_ux.json` — законы эргономики ISO 9241-110:2020 и 30 Laws of UX.
-4. `04_baymard_ecommerce_benchmarks.json` — паттерны электронной коммерции и чекаута Baymard Institute.
-5. `05_human_ai_interaction.json` — паттерны взаимодействия человек-ИИ (Microsoft HAX, Google PAIR v3, GenAI).
-6. `06_core_web_vitals_2026.json` — метрики производительности во времени выполнения (Core Web Vitals).
+### Step 1. Choose the Target Seed Module
+1. `01_wcag_2_2_and_3_0.json` — WCAG 2.2 Level A/AA/AAA and WCAG 3.0 Draft criteria.
+2. `02_platform_design_systems.json` — Apple HIG (iOS 26 / Liquid Glass), Material Design 3, and IBM Carbon.
+3. `03_ergonomics_and_laws_of_ux.json` — ISO 9241-110:2020 dialogue principles and Laws of UX.
+4. `04_baymard_ecommerce_benchmarks.json` — Baymard Institute e-commerce, checkout, PDP, and self-service rules.
+5. `05_human_ai_interaction.json` — Microsoft HAX 18 Guidelines, Google PAIR v3, and GenAI UX patterns.
+6. `06_core_web_vitals_2026.json` — Runtime Core Web Vitals (`LCP`, `INP`, `CLS`).
 
-### Шаг 2. Заполните все обязательные поля правила
-Каждое правило обязано содержать:
-- `id`: уникальный идентификатор в формате `ПРЕФИКС-КОД` (например, `WCAG-2.4.11`, `BAYMARD-CHK-01`).
-- `standard_family` и `category`: строго из перечислений в `/schema/types.ts`.
-- `title_ru` и `description_ru`: емкое название и подробное нормативное обоснование на русском языке.
-- `legal_or_business_risk`: уровень юридического (EAA/ADA) или конверсионного риска.
-- `target_states`: состояния из матрицы IBM Carbon (`default`, `focus-visible`, `viewport_320px`, `dark_mode` и т.д.).
-- `quantitative_threshold`: измеримые числовые лимиты (`min_target_px`, `max_lcp_ms`, `min_contrast_text` и т.д.).
-- `verification_modality`: `AUTOMATED_DOM`, `AUTOMATED_RUNTIME_PERF`, `AI_MULTIMODAL_VISION` или `MANUAL_INTERACTIVE`.
+### Step 2. Populate Required Rule Properties
+Every rule object must include:
+- `id`: Unique identifier in `PREFIX-CODE` format (e.g., `WCAG-2.4.11`, `BAYMARD-CHK-01`).
+- `standard_family` and `category`: Valid enum values from `/schema/types.ts`.
+- `title` and `description`: Clear normative title and detailed ergonomic/business rationale.
+- `legal_or_business_risk`: Severity tier (`CRITICAL_LEGAL_EAA_ADA`, `HIGH_CONVERSION_BLOCKER`, `MEDIUM_UX_FRICTION`, `BEST_PRACTICE_ENHANCEMENT`).
+- `target_states`: Applicable UI/viewport states from the 11-state IBM Carbon matrix.
+- `quantitative_threshold`: Measurable numeric limits (`min_target_px`, `max_lcp_ms`, `min_contrast_text`, etc.).
+- `verification_modality`: `AUTOMATED_DOM`, `AUTOMATED_RUNTIME_PERF`, `AI_MULTIMODAL_VISION`, or `MANUAL_INTERACTIVE`.
 - `evaluation_outcomes`: `["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"]`.
-- `playwright_check_snippet`: исполняемый JS-сниппет, возвращающий одно из трех состояний.
-- `vision_prompt_heuristic`: четкая инструкция для мультимодальной модели Gemini Vision.
-- `remediation_guide_ru`: конкретное руководство по исправлению в коде и дизайне на русском языке.
+- `playwright_check_snippet`: Executable JS/TS assertion returning one of the 3 evaluation outcomes.
+- `vision_prompt_heuristic`: Specific evaluation prompt for Gemini Multimodal Vision on screenshots.
+- `remediation_guide`: Actionable code and design fix.
 
-### Шаг 3. Проверьте схему и пересоберите SQLite-базу
-Перед созданием Pull Request выполните:
+### Step 3. Validate Schema & Rebuild SQLite
+Before opening a Pull Request, run all verification scripts:
 
 ```bash
 npm run validate:schema
@@ -38,4 +38,4 @@ npm run mcp:test
 npm run audit -- --self-test
 ```
 
-Все четыре команды должны завершиться с кодом `0` без ошибок валидации.
+All four commands must exit with code `0`.

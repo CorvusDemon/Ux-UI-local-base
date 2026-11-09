@@ -3,8 +3,8 @@
     "id": "UXLAW-DOHERTY-01",
     "standard_family": "LAWS_OF_UX",
     "category": "Runtime_Performance",
-    "title_ru": "Порог Доэрти (Doherty Threshold — визуальный отклик интерфейса < 400 мс)",
-    "description_ru": "Продуктивность и вовлеченность пользователя резко возрастают, когда компьютер и человек взаимодействуют со скоростью менее 400 мс, при которой ни один из них не ждет другого. Любое нажатие кнопки, переключение фильтра или отправка формы должны выдавать мгновенную визуальную обратную связь (< 100–400 мс) через Optimistic UI, активное состояние `:active` или мгновенный скелетон.",
+    "title": "Doherty Threshold — UI Visual Feedback Under 400ms",
+    "description": "Productivity and user engagement soar when a computer and its users interact at a pace (< 400ms) that ensures neither has to wait on the other. Every button click, filter toggle, or form submission must deliver immediate visual feedback (< 100–400ms) via Optimistic UI, `:active` state transitions, or instant skeleton placeholders.",
     "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
     "target_states": ["active", "loading_skeleton", "default"],
     "quantitative_threshold": {
@@ -15,7 +15,7 @@
     "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
     "playwright_check_snippet": "const inp = window.__webVitals?.inp_ms ?? 50; return inp <= 400 ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
     "vision_prompt_heuristic": "Verify that interactive buttons and controls have distinct immediate feedback states (active/pressed styling, optimistic state transitions, or progress indicators) so users never wonder if their click registered.",
-    "remediation_guide_ru": "Внедрите Optimistic UI для быстрых мутаций (лайки, добавление в корзину, переключение табов), используйте `useOptimistic` / мгновенный переход состояния кнопки в `loading` за `< 50 мс` и выносите тяжелые вычисления из главного потока.",
+    "remediation_guide": "Implement Optimistic UI for fast mutations (likes, add-to-cart, tab switches), transition button states to `loading` within `< 50ms` via `useOptimistic`, and offload heavy computations from the main thread.",
     "wcag_3_0_tier": "SILVER",
     "iso_9241_110_principle": "USER_ENGAGEMENT"
   },
@@ -23,8 +23,8 @@
     "id": "UXLAW-POSTEL-01",
     "standard_family": "LAWS_OF_UX",
     "category": "Forms_Checkout",
-    "title_ru": "Закон Постела (Postel's Law — либеральный прием пользовательского ввода и автонормализация)",
-    "description_ru": "«Будьте консервативны в том, что отправляете, и либеральны в том, что принимаете от других». Поля ввода телефона, банковской карты, ИНН, почтового индекса, даты и суммы не должны выдавать ошибку валидации из-за пробелов, дефисов, скобок или плюса (`+7 (999) 123-45-67` vs `89991234567`). Парсинг и очистка символов должны выполняться программно на стороне клиента без перекладывания форматирования на пользователя.",
+    "title": "Postel's Law — Liberal Input Acceptance & Programmatic Normalization",
+    "description": "'Be conservative in what you send, be liberal in what you accept from others.' Input fields for phone numbers, credit cards, tax IDs, postal codes, dates, and currency amounts must never fail validation due to user-entered spaces, dashes, parentheses, or country prefixes (`+1 (555) 123-4567` vs `15551234567`). Parsing and sanitization must happen in application code rather than forcing formatting effort onto the user.",
     "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
     "target_states": ["default", "error"],
     "quantitative_threshold": {
@@ -34,7 +34,7 @@
     "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
     "playwright_check_snippet": "const inputs = Array.from(document.querySelectorAll('input[type=\"tel\"], input[name*=\"phone\" i], input[name*=\"card\" i], input[name*=\"zip\" i], input[name*=\"postal\" i]')); if (!inputs.length) return 'DOES_NOT_APPLY'; const overlyStrict = inputs.filter(i => { const pat = i.getAttribute('pattern'); return pat && pat === '^[0-9]+$' && (i.maxLength > 0 && i.maxLength <= 11); }); return overlyStrict.length === 0 ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
     "vision_prompt_heuristic": "Inspect any form fields on the page (phone, credit card, date, postal code). If no form fields exist, return DOES_NOT_APPLY. Check if error messages or helper text punish users for entering spaces, dashes, or parentheses.",
-    "remediation_guide_ru": "Уберите жесткие HTML-атрибуты `pattern=\"^[0-9]{10}$\"` и `maxlength`, обрезающие пробелы при вставке из буфера обмена. Нормализуйте строку перед валидацией: `const cleanValue = rawValue.replace(/[\\s\\-()]/g, '');` и автоматически применяйте маску чтения на лету.",
+    "remediation_guide": "Remove restrictive HTML attributes such as `pattern=\"^[0-9]{10}$\"` and tight `maxlength` caps that truncate pasted spaces. Normalize input values in code before validation (`const cleanValue = rawValue.replace(/[\\s\\-()]/g, '');`) and format display masks automatically.",
     "wcag_3_0_tier": "SILVER",
     "iso_9241_110_principle": "USE_ERROR_ROBUSTNESS"
   },
@@ -42,8 +42,8 @@
     "id": "UXLAW-VONRESTORFF-01",
     "standard_family": "LAWS_OF_UX",
     "category": "Visual_Hierarchy",
-    "title_ru": "Эффект фон Ресторфф (Von Restorff Isolation Effect — ровно 1 доминирующий Primary CTA на экран/блок)",
-    "description_ru": "Когда присутствует несколько похожих объектов, тот, который визуально отличается от остальных, запоминается и привлекает внимание лучше всего. В пределах одного экрана (viewport) или смысловой карточки/модального окна должна быть строго одна визуально доминирующая кнопка основного действия (Primary CTA с акцентной заливкой), тогда как вторичные действия должны иметь контурный (Secondary/Outline) или текстовый (Ghost/Tertiary) стиль.",
+    "title": "Von Restorff Isolation Effect — Single Visually Dominant Primary CTA per Viewport/Card",
+    "description": "When multiple similar objects are present, the one that differs from the rest is most likely to be remembered and acted upon. Within any single viewport or distinct card/dialog container, there must be strictly one visually dominant Primary CTA (high-contrast solid accent fill), while secondary actions use Outline/Secondary or Ghost/Tertiary styling.",
     "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
     "target_states": ["default", "dark_mode"],
     "quantitative_threshold": {
@@ -53,7 +53,7 @@
     "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
     "playwright_check_snippet": "const buttons = Array.from(document.querySelectorAll('button, a[role=\"button\"], input[type=\"submit\"]')).filter(b => { const r = b.getBoundingClientRect(); return r.top >= 0 && r.bottom <= window.innerHeight && r.width > 60 && r.height >= 36; }); if (!buttons.length) return 'DOES_NOT_APPLY'; return 'APPLIED_PASS';",
     "vision_prompt_heuristic": "Examine the primary viewport screenshot. Count how many competing high-saturation solid-filled Primary CTA buttons fight for attention in the hero section or active modal. Pass if there is a clear singular primary focal action and secondary actions are visually subordinate; fail if multiple loud primary buttons compete equally.",
-    "remediation_guide_ru": "Разделите кнопки по трем уровням визуального веса: `Primary` (акцентная заливка `bg-primary text-on-primary` — максимум 1 на экран/форму), `Secondary` (`border-outline bg-transparent`) и `Tertiary` (`bg-transparent text-muted`).",
+    "remediation_guide": "Structure buttons across three explicit hierarchy tiers: `Primary` (solid accent fill `bg-primary text-on-primary` — max 1 per screen/dialog), `Secondary` (`border-outline bg-transparent`), and `Tertiary` (`bg-transparent text-muted`).",
     "wcag_3_0_tier": "SILVER",
     "iso_9241_110_principle": "SUITABILITY_FOR_TASK"
   },
@@ -61,8 +61,8 @@
     "id": "UXLAW-GESTALT-01",
     "standard_family": "LAWS_OF_UX",
     "category": "Cognitive_Load",
-    "title_ru": "Законы Гештальта: Близость и Общая область (Расстояние Label-to-Input < 50% от шага между полями)",
-    "description_ru": "Согласно принципам Гештальт-психологии (Закон Близости / Law of Proximity и Закон Общей Области / Law of Common Region), элементы, расположенные близко друг к другу, воспринимаются как единая группа. Расстояние от подписи (`<label>`) до связанного с ней поля ввода (`<input>`) должно составлять менее 50% от вертикального отступа между предыдущим полем и этой подписью (например, 4–6px от label до input при 16–24px между группами полей).",
+    "title": "Gestalt Proximity & Common Region — Label-to-Input Distance < 50% of Inter-Field Gap",
+    "description": "Under Gestalt psychology (Law of Proximity and Law of Common Region), objects placed close together are perceived as a single functional unit. The vertical distance from a `<label>` to its associated `<input>` must be less than 50% of the vertical gap between the previous input field and that label (e.g., 4–6px from label to input vs 16–24px between separate form groups).",
     "legal_or_business_risk": "MEDIUM_UX_FRICTION",
     "target_states": ["default", "viewport_320px"],
     "quantitative_threshold": {
@@ -74,7 +74,7 @@
     "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
     "playwright_check_snippet": "const labels = Array.from(document.querySelectorAll('label')); if (labels.length < 2) return 'DOES_NOT_APPLY'; for (let i = 1; i < labels.length; i++) { const prevInput = labels[i-1].control || labels[i-1].nextElementSibling; const currInput = labels[i].control || labels[i].nextElementSibling; if (prevInput && currInput) { const lRect = labels[i].getBoundingClientRect(); const iRect = currInput.getBoundingClientRect(); const pRect = prevInput.getBoundingClientRect(); const labelToInput = Math.abs(iRect.top - lRect.bottom); const prevToLabel = Math.abs(lRect.top - pRect.bottom); if (prevToLabel > 0 && labelToInput >= prevToLabel * 0.65) return 'VIOLATED_FAIL'; } } return 'APPLIED_PASS';",
     "vision_prompt_heuristic": "Inspect any forms or card groups on the page. If no forms or grouped content exist, return DOES_NOT_APPLY. Verify that each label sits unmistakably closer to its own input field than to the field above it, and related sections are clearly bounded by whitespace or subtle borders (Common Region).",
-    "remediation_guide_ru": "Оборачивайте каждую пару `label + input + helper-text` в контейнер `.form-field { display: flex; flex-direction: column; gap: 6px; }`, а родительской форме задавайте `.form-stack { display: flex; flex-direction: column; gap: 20px; }`.",
+    "remediation_guide": "Wrap each `label + input + helper-text` unit in a `.form-field { display: flex; flex-direction: column; gap: 6px; }` container, and space sibling field groups via `.form-stack { display: flex; flex-direction: column; gap: 20px; }`.",
     "wcag_3_0_tier": "SILVER",
     "iso_9241_110_principle": "SELF_DESCRIPTIVENESS"
   },
@@ -82,8 +82,8 @@
     "id": "UXLAW-MILLER-CHUNKING-01",
     "standard_family": "LAWS_OF_UX",
     "category": "Cognitive_Load",
-    "title_ru": "Закон Миллера (5–9 элементов навигации) и Чанкинг (группировка длинных чисел по 4 знака)",
-    "description_ru": "Объем рабочей памяти человека удерживает в среднем 7 ± 2 элемента (Закон Миллера), а при активной обработке — до 4 смысловых блоков (Chunking). Навигационные меню верхнего уровня не должны содержать более 5–9 негруппированных пунктов, а длинные цифровые последовательности (телефоны, номера карт, счета, артикулы) должны визуально разбиваться пробелами на группы по 3–4 символа.",
+    "title": "Miller's Law (5–9 Top-Level Nav Items) & 4-Digit Alphanumeric Chunking",
+    "description": "The average human working memory holds 7 ± 2 items (Miller's Law) and up to 4 active chunks (Chunking). Top-level ungrouped navigation menus must not exceed 5–9 items, and long numeric strings (credit cards, phone numbers, IBANs, order numbers) must be visually formatted into 3–4 character chunks.",
     "legal_or_business_risk": "MEDIUM_UX_FRICTION",
     "target_states": ["default", "viewport_320px"],
     "quantitative_threshold": {
@@ -95,7 +95,7 @@
     "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
     "playwright_check_snippet": "const navItems = document.querySelectorAll('header nav > ul > li, header nav > a'); if (navItems.length === 0) return 'DOES_NOT_APPLY'; return navItems.length <= 9 ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
     "vision_prompt_heuristic": "Examine the top-level navigation bar, category lists, and any displayed numeric strings (order IDs, phone numbers, prices). Verify that top-level navigation has <= 9 items and dense information is chunked into scannable groups of 3-5 items.",
-    "remediation_guide_ru": "Если в главном меню более 7–9 пунктов, объедините второстепенные разделы в категоризированное выпадающее меню или каталог. Форматируйте длинные числа через `Intl.NumberFormat('ru-RU')` и регулярные выражения группировки по 4 цифры.",
+    "remediation_guide": "If top-level navigation exceeds 7–9 links, consolidate secondary destinations into categorized mega-menus or drawers. Format long numeric strings using `Intl.NumberFormat` and 4-digit regex grouping.",
     "wcag_3_0_tier": "SILVER",
     "iso_9241_110_principle": "LEARNER_SUPPORT"
   },
@@ -103,8 +103,8 @@
     "id": "UXLAW-SERIAL-ZEIGARNIK-01",
     "standard_family": "LAWS_OF_UX",
     "category": "Navigation_Search",
-    "title_ru": "Эффект края (Serial Position) и Эффекты Зейгарник / Градиента цели (Индикаторы прогресса)",
-    "description_ru": "Пользователи лучше всего запоминают и находят первый и последний элементы списка (Serial Position Effect: поэтому логотип/Каталог и Профиль/Корзина/CTA размещаются по краям навигации). Согласно эффектам Зейгарник и Градиента цели (Goal-Gradient Effect), незавершенные многошаговые процессы (онбординг, чекаут, анкета) обязаны иметь наглядный индикатор прогресса (`Шаг 2 из 4` или прогресс-бар с предзаполненным стартовым прогрессом), ускоряющий доведение задачи до конца.",
+    "title": "Serial Position Effect & Zeigarnik / Goal-Gradient Progress Indicators",
+    "description": "Users best recall and locate the first and last items in a sequence (Serial Position Effect: placing Brand/Catalog first and Profile/Cart/Primary CTA last in navigation bars). Under the Zeigarnik and Goal-Gradient Effects, incomplete multi-step flows (onboarding, checkout, wizards) must display an explicit step progress indicator (`Step 2 of 4` or a progress bar with endowed initial progress) to accelerate task completion.",
     "legal_or_business_risk": "HIGH_CONVERSION_BLOCKER",
     "target_states": ["default", "viewport_320px"],
     "quantitative_threshold": {
@@ -114,7 +114,7 @@
     "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
     "playwright_check_snippet": "const nav = document.querySelector('header, nav'); if (!nav) return 'DOES_NOT_APPLY'; return 'APPLIED_PASS';",
     "vision_prompt_heuristic": "Check two ergonomics patterns: 1) In the primary navigation bar, verify that the most important brand/home link and primary conversion/account action occupy the first and last positions (Serial Position Effect). 2) If a multi-step flow, onboarding, or checkout is shown, verify that a clear step progress indicator is visible.",
-    "remediation_guide_ru": "Закрепите ключевые точки входа на крайних левой и правой позициях шапки/нижнего таб-бара. Во всех многошаговых формах добавьте `<ol aria-label='Этапы оформления'>` с `aria-current='step'` и визуальной шкалой выполненного прогресса.",
+    "remediation_guide": "Anchor primary entry points and conversion CTAs at the far-left and far-right edges of headers and bottom tab bars. In multi-step flows, render `<ol aria-label='Checkout steps'>` with `aria-current='step'` and a visual completion bar.",
     "wcag_3_0_tier": "SILVER",
     "iso_9241_110_principle": "USER_ENGAGEMENT"
   },
@@ -122,8 +122,8 @@
     "id": "ISO-9241-DIALOGUE-01",
     "standard_family": "ISO_9241_110",
     "category": "Cognitive_Load",
-    "title_ru": "Принципы диалога ISO 9241-110:2020 — Пригодность для задачи, Управляемость и Защита от ошибок",
-    "description_ru": "Международный стандарт эргономики взаимодействия человек-система ISO 9241-110:2020 требует соблюдения 7 принципов: 1) Пригодность для задачи (отсутствие лишних полей и шагов), 2) Самоописательность (понятные подписи и статусы без чтения инструкций), 3) Соответствие ожиданиям (привычные паттерны и консистентная терминология), 4) Поддержка обучения, 5) Управляемость (пользователь сам управляет темпом, нет авто-каруселей без паузы, есть Отмена/Назад), 6) Устойчивость к ошибкам ввода (предотвращение и мягкое исправление) и 7) Вовлеченность пользователя.",
+    "title": "ISO 9241-110:2020 Dialogue Principles — Task Suitability, Controllability & Error Robustness",
+    "description": "ISO 9241-110:2020 Ergonomics of Human-System Interaction mandates 7 dialogue principles: 1) Suitability for the user's tasks (zero unnecessary inputs or steps), 2) Self-descriptiveness (clear labels and statuses without external manuals), 3) Conformity with user expectations (consistent terminology and conventions), 4) Learnability, 5) Controllability (user-paced interaction, no auto-advancing carousels without pause, explicit Back/Cancel), 6) Use error robustness (error prevention and forgiving recovery), and 7) User engagement.",
     "legal_or_business_risk": "MEDIUM_UX_FRICTION",
     "target_states": ["default", "error", "focus-visible"],
     "quantitative_threshold": {
@@ -131,11 +131,10 @@
     },
     "verification_modality": "AI_MULTIMODAL_VISION",
     "evaluation_outcomes": ["APPLIED_PASS", "VIOLATED_FAIL", "DOES_NOT_APPLY"],
-    "playwright_check_snippet": "const autoPlayVideos = Array.from(document.querySelectorAll('video[autoplay], [data-autoplay=\"true\"]')).filter(v => !v.hasAttribute('controls') && !document.querySelector('[aria-label*=\"pause\" i], [aria-label*=\"пауза\" i]')); return autoPlayVideos.length === 0 ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
+    "playwright_check_snippet": "const autoPlayVideos = Array.from(document.querySelectorAll('video[autoplay], [data-autoplay=\"true\"]')).filter(v => !v.hasAttribute('controls') && !document.querySelector('[aria-label*=\"pause\" i]')); return autoPlayVideos.length === 0 ? 'APPLIED_PASS' : 'VIOLATED_FAIL';",
     "vision_prompt_heuristic": "Evaluate the interface against ISO 9241-110:2020 Controllability and Self-Descriptiveness: confirm there are no forced auto-rotating carousels without pause controls, no dark-pattern confirmshaming modals, and all interactive controls clearly communicate their purpose.",
-    "remediation_guide_ru": "Исключите необязательные поля из целевых форм (Suitability for the task), обеспечьте кнопку «Назад / Отменить» на каждом шаге диалога (Controllability) и добавьте встроенные подсказки формата до возникновения ошибки (Use error robustness).",
+    "remediation_guide": "Remove non-essential fields from conversion forms (Suitability for the task), provide explicit 'Back / Cancel' actions at every dialog step (Controllability), and display inline format examples prior to validation errors (Use error robustness).",
     "wcag_3_0_tier": "SILVER",
     "iso_9241_110_principle": "CONTROLLABILITY"
   }
 ]
-
